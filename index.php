@@ -16,7 +16,7 @@ switch ($endpoint) {
             case "GET":
                 http_response_code(200);
                 header("Content-Type: application/json");
-                $userCount = UserController::getUserCount();
+                $userCount = UserController::getCount();
                 echo json_encode($userCount);
                 break;
             case "POST":
@@ -38,7 +38,7 @@ switch ($endpoint) {
             case "GET":
                 http_response_code(200);
                 header("Content-Type: application/json");
-                $threadCount = ThreadController::getThreadCount();
+                $threadCount = ThreadController::getCount();
                 echo json_encode($threadCount);
                 break;
             case "POST":
@@ -60,7 +60,7 @@ switch ($endpoint) {
             case "GET":
                 http_response_code(200);
                 header("Content-Type: application/json");
-                $postCount = PostController::getPostCount();
+                $postCount = PostController::getCount();
                 echo json_encode($postCount);
                 break;
             case "POST":
