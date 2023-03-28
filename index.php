@@ -1,4 +1,5 @@
 <?php
+
 require_once "./app/controllers/UserController.php";
 require_once "./app/controllers/ThreadController.php";
 require_once "./app/controllers/PostController.php";
@@ -14,14 +15,29 @@ switch ($endpoint) {
     case "users":
         switch ($method) {
             case "GET":
-                http_response_code(200);
                 header("Content-Type: application/json");
-                $userCount = UserController::getCount();
-                echo json_encode($userCount);
+                if ($parameter) {
+                    $user = UserController::getUser($parameter);
+                    if ($user) {
+                        http_response_code(200);
+                        echo $user->json();
+                    } else {
+                        http_response_code(404);
+                    }
+
+                } else {
+                    $userCount = UserController::getCount();
+                    echo json_encode($userCount);
+                }
                 break;
             case "POST":
-                http_response_code(201);
+                $json = file_get_contents("php://input");
+                $data = json_decode($json, true);
+                $user = new User($data);
+                $status = UserController::register($user);
+                $status ? http_response_code(201) : http_response_code(400);
                 header("Content-Type: application/json");
+                echo json_encode($status);
                 break;
             case "PUT":
                 http_response_code(200);
