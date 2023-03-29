@@ -8,7 +8,7 @@ class Post {
     private string $createdAt;
 
     public function __construct(array $data) {
-        $requiredKeys = ["id", "title", "description", "userId", "threadId"];
+        $requiredKeys = ["title", "description", "userId", "threadId"];
         foreach ($requiredKeys as $key) {
             if (!isset($data[$key])) throw new Exception("$key is required.");
         }
@@ -33,7 +33,7 @@ class Post {
         return $this->title;
     }
 
-    public function setTitle(int $title) : void {
+    public function setTitle(string $title) : void {
         $this->title = $title;
     }
 
@@ -41,7 +41,7 @@ class Post {
         return $this->description;
     }
 
-    public function setDescription(int $description) : void {
+    public function setDescription(string $description) : void {
         $this->description = $description;
     }
 
@@ -65,7 +65,7 @@ class Post {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(int $createdAt) : void {
+    public function setCreatedAt(string $createdAt) : void {
         $this->createdAt = $createdAt;
     }
 

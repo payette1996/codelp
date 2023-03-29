@@ -7,7 +7,7 @@ class Thread {
     private string $createdAt;
 
     public function __construct(array $data) {
-        $requiredKeys = ["id", "title", "description", "userId"];
+        $requiredKeys = ["title", "description", "userId"];
         foreach ($requiredKeys as $key) {
             if (!isset($data[$key])) throw new Exception("$key is required.");
         }
@@ -32,7 +32,7 @@ class Thread {
         return $this->title;
     }
 
-    public function setTitle(int $title) : void {
+    public function setTitle(string $title) : void {
         $this->title = $title;
     }
 
@@ -40,7 +40,7 @@ class Thread {
         return $this->description;
     }
 
-    public function setDescription(int $description) : void {
+    public function setDescription(string $description) : void {
         $this->description = $description;
     }
 
@@ -56,7 +56,7 @@ class Thread {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(int $createdAt) : void {
+    public function setCreatedAt(string $createdAt) : void {
         $this->createdAt = $createdAt;
     }
 

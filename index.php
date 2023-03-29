@@ -65,7 +65,7 @@ switch ($endpoint) {
                     echo json_encode($threadCount);
                 }
                 break;
-            case "Thread":
+            case "POST":
                 $json = file_get_contents("php://input");
                 $data = json_decode($json, true);
                 $thread = new Thread($data);
@@ -101,7 +101,7 @@ switch ($endpoint) {
                     echo json_encode($postCount);
                 }
                 break;
-            case "Post":
+            case "POST":
                 $json = file_get_contents("php://input");
                 $data = json_decode($json, true);
                 $post = new Post($data);
