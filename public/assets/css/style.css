@@ -14,7 +14,6 @@ html {
 body {
     margin: 0;
     background-color: var(--primary-bg);
-    overflow: hidden;
 }
 
 nav {
@@ -34,8 +33,6 @@ main {
     border-radius: 5px;
     margin: .5rem;
     min-height: calc(100vh - 10rem);
-    overflow-x: hidden;
-    overflow-y: scroll;
 }
 
 footer {
