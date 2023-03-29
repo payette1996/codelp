@@ -23,12 +23,25 @@ BODY :
     }
 
 ## PUT User
+### You must include at minimum the ID and the details to be changed
 URI : .../users/*
 BODY : 
+    {
+        "id" : 1,
+        "email" : "payette1996@gmail.com",
+        "username" : "payetet1996",
+        "password" : "123",
+        "firstname" : "Louis",
+        "lastname" : "Payette"
+    }
 
 ## DELETE User
+### You must include the User ID
 URI : .../users/*
 BODY : 
+    {
+        "id" : 1
+    }
 
 
 
@@ -44,18 +57,28 @@ BODY : null
 URI : .../threads
 BODY : 
     {
-        "title" : "My thread title",
+        "title" : "My Thread Title",
         "description" : "My thread description",
         "userId" : 1
     }
 
 ## PUT Thread
+### You must include at minimum the ID and the details to be changed
 URI : .../threads/*
 BODY : 
+    {
+        "id" : 1,
+        "title" : "My Thread Title",
+        "description" : "My thread description",
+    }
 
 ## DELETE Thread
+### You must include the Thread ID
 URI : .../threads/*
 BODY : 
+    {
+        "id" : 1
+    }
 
 
 
@@ -71,16 +94,26 @@ BODY : null
 URI : .../threads
 BODY : 
     {
-        "title" : "My post title",
+        "title" : "My Post Title",
         "description" : "My post description",
         "userId" : 1,
         "threadId" : 1
     }
 
 ## PUT Post
-URI : .../threads/*
+### You must include at minimum the ID and the details to be changed
+URI : .../posts/*
 BODY : 
+    {
+        "id" : 1,
+        "title" : "My Post Title",
+        "description" : "My post description",
+    }
 
 ## DELETE Post
-URI : .../threads/*
+### You must include the Thread ID
+URI : .../posts/*
 BODY : 
+    {
+        "id" : 1
+    }
