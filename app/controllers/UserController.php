@@ -23,7 +23,7 @@ class UserController {
         return $result ? new User($result) : null;
     }
 
-    public static function register(User $user) : bool {
+    public static function postUser(User $user) : bool {
         $sql = "
             INSERT INTO users (email, username, firstname, lastname, password)
             VALUES (:email, :username, :firstname, :lastname, :password)
