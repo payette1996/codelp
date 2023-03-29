@@ -38,5 +38,29 @@ class ThreadController {
         $result = $stmt->execute();
         return $result;
     }
+
+    public static function putThread(Thread $thread) : bool {
+        $sql = "
+            UPDATE threads
+            SET title = :title,
+            description = :description,
+            WHERE id = :id
+        ";
+        $stmt = Database::pdo()->prepare($sql);
+        $params = [
+            ":title" => $thread->getTitle(),
+            ":description" => $thread->getDescription(),
+            ":id" => $thread->getId()
+        ];
+        foreach ($params as $param => $value) $stmt->bindValue($param, $value);
+        return $stmt->execute();
+    }
+
+    public static function deleteThread(Thread $thread) : bool {
+        $sql = "DELETE FOM threads WHERE id = :id";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":id", $thread->getId());
+        return $stmt->execute();
+    }
 }
 ?>

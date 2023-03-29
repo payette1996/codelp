@@ -37,8 +37,37 @@ class UserController {
         ];
         $stmt = Database::pdo()->prepare($sql);
         foreach ($params as $param => $value) $stmt->bindValue($param, $value);
-        $result = $stmt->execute();
-        return $result;
+        return $stmt->execute();
+    }
+
+    public static function putUser(User $user) : bool {
+        $sql = "
+            UPDATE users
+            SET email = :email,
+            username = :username,
+            firstname = :firstname,
+            lastname = :lastname,
+            password = :password
+            WHERE id = :id
+        ";
+        $stmt = Database::pdo()->prepare($sql);
+        $params = [
+            ":email" => $user->getEmail(),
+            ":username" => $user->getUsername(),
+            ":firstname" => $user->getFirstname(),
+            ":lastname" => $user->getLastname(),
+            ":password" => $user->getPassword(),
+            ":id" => $user->getId()
+        ];
+        foreach ($params as $param => $value) $stmt->bindValue($param, $value);
+        return $stmt->execute();
+    }
+
+    public static function deleteUser(User $user) : bool {
+        $sql = "DELETE FOM users WHERE id = :id";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":id", $user->getId());
+        return $stmt->execute();
     }
 }
 ?>

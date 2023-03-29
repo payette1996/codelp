@@ -39,5 +39,29 @@ class PostController {
         $result = $stmt->execute();
         return $result;
     }
+
+    public static function putPost(Post $post) : bool {
+        $sql = "
+            UPDATE posts
+            SET title = :title,
+            description = :description,
+            WHERE id = :id
+        ";
+        $stmt = Database::pdo()->prepare($sql);
+        $params = [
+            ":title" => $post->getTitle(),
+            ":description" => $post->getDescription(),
+            ":id" => $post->getId()
+        ];
+        foreach ($params as $param => $value) $stmt->bindValue($param, $value);
+        return $stmt->execute();
+    }
+
+    public static function deletePost(Post $post) : bool {
+        $sql = "DELETE FOM Posts WHERE id = :id";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":id", $post->getId());
+        return $stmt->execute();
+    }
 }
 ?>
