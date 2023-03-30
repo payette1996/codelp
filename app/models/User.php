@@ -2,11 +2,11 @@
 class User {
     private int $id;
     private string $email;
-    private string $username;
     private string $password;
     private string $firstname;
     private string $lastname;
     private string $createdAt;
+    private string $username;
     
     public function __construct(array $data) {
         // $requiredKeys = ["email", "password"];

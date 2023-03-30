@@ -13,8 +13,10 @@ class PostController {
 
     public static function getPost(int $id) : ?Post {
         $sql = "
-            SELECT posts.*, users.username, posts.user_id AS userId, posts.thread_id AS threadId, posts.created_at AS createdAt
-            FROM posts JOIN users ON posts.user_id = users.id
+            SELECT posts.*, users.username, threads.title AS threadTitle, posts.user_id AS userId, posts.thread_id AS threadId, posts.created_at AS createdAt
+            FROM posts
+            JOIN users ON posts.user_id = users.id
+            JOIN threads ON posts.thread_id = threads.id
             WHERE posts.id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);

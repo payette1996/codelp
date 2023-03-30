@@ -7,6 +7,7 @@ class Post {
     private int $threadId;
     private string $createdAt;
     private string $username;
+    private string $threadTitle;
 
     public function __construct(array $data) {
         // $requiredKeys = ["title", "description", "userId", "threadId"];
@@ -76,6 +77,14 @@ class Post {
 
     public function setUsername(string $username) : void {
         $this->username = $username;
+    }
+
+    public function getThreadTitle() : string {
+        return $this->threadTitle;
+    }
+
+    public function setThreadTitle(string $threadTitle) : void {
+        $this->threadTitle = $threadTitle;
     }
 
     public function json() {
