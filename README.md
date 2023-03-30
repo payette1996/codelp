@@ -16,33 +16,39 @@ URI : .../users/
 BODY : 
     {
         "email" : "payette1996@gmail.com",
-        "username" : "payetet1996",
+        "username" : "payette1996",
         "password" : "123",
         "firstname" : "Louis",
         "lastname" : "Payette"
     }
 
 ## PUT User
-### You must include at minimum the ID and the details to be changed
+### 2 objects; 1: your email and password; 2: new desired details
 URI : .../users/*
 BODY : 
     {
-        "id" : 1,
-        "email" : "payette1996@gmail.com",
-        "username" : "payetet1996",
-        "password" : "123",
-        "firstname" : "Louis",
-        "lastname" : "Payette"
+        "user": {
+            "id" : 1,
+            "email" : "payette1996@gmail.com",
+            "password" : "123"
+        }
+        "new: {
+            "email" : "payette1996@gmail.com",
+            "username" : "payette1996",
+            "password" : "123",
+            "firstname" : "Louis",
+            "lastname" : "Payette"
+        }
     }
 
 ## DELETE User
-### You must include the User ID
+### Your email and password
 URI : .../users/*
 BODY : 
     {
-        "id" : 1
+        "email" : "payette1996@gmail.com",
+        "password" : "123"
     }
-
 
 
 ## GET Thread Count
@@ -63,21 +69,36 @@ BODY :
     }
 
 ## PUT Thread
-### You must include at minimum the ID and the details to be changed
+### 3 objects; 1: your username and password; 2: thread ID; 3: newly desired content
 URI : .../threads/*
 BODY : 
     {
-        "id" : 1,
-        "title" : "My Thread Title",
-        "description" : "My thread description",
+        "user": {
+            "email" : "payette1996@gmail.com",
+            "password" : "123"
+        }
+        "thread": {
+            "id" : 1
+        }
+        "new: {
+            "title" : "New Title",
+            "description" : "new description",
+        }
     }
 
+
 ## DELETE Thread
-### You must include the Thread ID
+### 2 objects; 1: your username and password; 2: thread ID
 URI : .../threads/*
 BODY : 
     {
-        "id" : 1
+        "user": {
+            "email" : "payette1996@gmail.com",
+            "password" : "123"
+        }
+        "thread": {
+            "id" : 1
+        }
     }
 
 
@@ -101,19 +122,34 @@ BODY :
     }
 
 ## PUT Post
-### You must include at minimum the ID and the details to be changed
+### 3 objects; 1: your username and password; 2: post ID; 3: newly desired content
 URI : .../posts/*
 BODY : 
     {
-        "id" : 1,
-        "title" : "My Post Title",
-        "description" : "My post description",
+        "user": {
+            "email" : "payette1996@gmail.com",
+            "password" : "123"
+        }
+        "post": {
+            "id" : 1
+        }
+        "new: {
+            "title" : "New Title",
+            "description" : "new description",
+        }
     }
 
+
 ## DELETE Post
-### You must include the Thread ID
+### 2 objects; 1: your username and password; 2: post ID
 URI : .../posts/*
 BODY : 
     {
-        "id" : 1
+        "user": {
+            "email" : "payette1996@gmail.com",
+            "password" : "123"
+        }
+        "post": {
+            "id" : 1
+        }
     }

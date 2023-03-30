@@ -39,11 +39,20 @@ switch ($endpoint) {
                 echo json_encode($status);
                 break;
             case "PUT":
+                $json = file_get_contents("php://input");
+                $data = json_decode($json, true);
+                $user = new User($data);
+                $status = UserController::putUser($user);
+                $status ? http_response_code(201) : http_response_code(400);
                 http_response_code(200);
                 header("Content-Type: application/json");
                 break;
             case "DELETE":
-                http_response_code(204);
+                $json = file_get_contents("php://input");
+                $data = json_decode($json, true);
+                $user = new User($data);
+                $status = UserController::putUser($user);
+                $status ? http_response_code(204) : http_response_code(400);
                 header("Content-Type: application/json");
                 break;
         }
