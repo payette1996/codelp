@@ -14,13 +14,13 @@ BODY : null
 ## POST User
 URI : .../users/
 BODY : 
-    <pre><code>{
+    <pre>{
         "email" : "payette1996@gmail.com",
         "username" : "payette1996",
         "password" : "123",
         "firstname" : "Louis",
         "lastname" : "Payette"
-    }</code></pre>
+    }</pre>
 
 ## PUT User
 ### 2 objects; 1: your email and password; 2: new desired details
