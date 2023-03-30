@@ -28,6 +28,7 @@ BODY :
 ### 2 objects; 1: your email and password; 2: new desired details
 URI : .../users/*
 BODY : 
+    <pre>
     {
         "user": {
             "email" : "payette1996@gmail.com",
@@ -41,15 +42,18 @@ BODY :
             "lastname" : "newLastname"
         }
     }
+    </pre>
 
 ## DELETE User
 ### Your email and password
 URI : .../users/*
 BODY : 
+    <pre>
     {
         "email" : "payette1996@gmail.com",
         "password" : "123"
     }
+    </pre>
 
 
 ## GET Thread Count
@@ -63,16 +67,19 @@ BODY : null
 ## POST Thread
 URI : .../threads
 BODY : 
+    <pre>
     {
         "title" : "My Thread Title",
         "description" : "My thread description",
         "userId" : 1
     }
+    </pre>
 
 ## PUT Thread
 ### 3 objects; 1: your username and password; 2: thread ID; 3: newly desired content
 URI : .../threads/*
 BODY : 
+    <pre>
     {
         "user": {
             "email" : "payette1996@gmail.com",
@@ -86,12 +93,14 @@ BODY :
             "description" : "new description"
         }
     }
+    </pre>
 
 
 ## DELETE Thread
 ### 2 objects; 1: your username and password; 2: thread ID
 URI : .../threads/*
 BODY : 
+    <pre>
     {
         "user": {
             "email" : "payette1996@gmail.com",
@@ -101,6 +110,7 @@ BODY :
             "id" : 1
         }
     }
+    </pre>
 
 
 
@@ -115,17 +125,20 @@ BODY : null
 ## POST Post
 URI : .../threads
 BODY : 
+    <pre>
     {
         "title" : "My Post Title",
         "description" : "My post description",
         "userId" : 1,
         "threadId" : 1
     }
+    </pre>
 
 ## PUT Post
 ### 3 objects; 1: your username and password; 2: post ID; 3: newly desired content
 URI : .../posts/*
 BODY : 
+    <pre>
     {
         "user": {
             "email" : "payette1996@gmail.com",
@@ -139,12 +152,14 @@ BODY :
             "description" : "new description"
         }
     }
+    </pre>
 
 
 ## DELETE Post
 ### 2 objects; 1: your username and password; 2: post ID
 URI : .../posts/*
 BODY : 
+    <pre>
     {
         "user": {
             "email" : "payette1996@gmail.com",
@@ -154,3 +169,4 @@ BODY :
             "id" : 1
         }
     }
+    </pre>
