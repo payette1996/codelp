@@ -13,8 +13,9 @@ class ThreadController {
 
     public static function getThread(int $id) : ?Thread {
         $sql = "
-            SELECT id, title, description, user_id as userId, created_at as createdAt
-            FROM threads WHERE id = :id
+            SELECT threads.*, users.username, threads.user_id AS userId, threads.created_at AS createdAt
+            FROM threads JOIN users ON threads.user_id = users.id
+            WHERE threads.id = :id        
         ";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);
@@ -42,15 +43,14 @@ class ThreadController {
     public static function putThread(Thread $thread) : bool {
         $sql = "
             UPDATE threads
-            SET title = :title,
-            description = :description,
+            SET title = :newTitle,
+            description = :newDescription,
             WHERE id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
         $params = [
-            ":title" => $thread->getTitle(),
-            ":description" => $thread->getDescription(),
-            ":id" => $thread->getId()
+            ":newTitle" => $thread->getTitle(),
+            ":newDescription" => $thread->getDescription()
         ];
         foreach ($params as $param => $value) $stmt->bindValue($param, $value);
         return $stmt->execute();

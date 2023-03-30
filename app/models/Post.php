@@ -6,6 +6,7 @@ class Post {
     private int $userId;
     private int $threadId;
     private string $createdAt;
+    private string $username;
 
     public function __construct(array $data) {
         $requiredKeys = ["title", "description", "userId", "threadId"];

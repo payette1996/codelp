@@ -5,6 +5,7 @@ class Thread {
     private string $description;
     private int $userId;
     private string $createdAt;
+    private string $username;
 
     public function __construct(array $data) {
         $requiredKeys = ["title", "description", "userId"];
@@ -58,6 +59,14 @@ class Thread {
 
     public function setCreatedAt(string $createdAt) : void {
         $this->createdAt = $createdAt;
+    }
+
+    public function getUsername() : string {
+        return $this->username;
+    }
+
+    public function setUsername(string $username) : void {
+        $this->username = $username;
     }
 
     public function json() {
