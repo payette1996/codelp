@@ -9,7 +9,7 @@ class User {
     private string $createdAt;
     
     public function __construct(array $data) {
-        $requiredKeys = ["email", "username", "password", "firstname", "lastname"];
+        $requiredKeys = ["email", "password"];
         foreach ($requiredKeys as $key) {
             if (!isset($data[$key])) throw new Exception("$key is required.");
         }

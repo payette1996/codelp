@@ -28,16 +28,15 @@ URI : .../users/*
 BODY : 
     {
         "user": {
-            "id" : 1,
             "email" : "payette1996@gmail.com",
             "password" : "123"
-        }
-        "new: {
-            "email" : "payette1996@gmail.com",
-            "username" : "payette1996",
-            "password" : "123",
-            "firstname" : "Louis",
-            "lastname" : "Payette"
+        },
+        "new": {
+            "email" : "newEmail@email.com",
+            "username" : "newUsername",
+            "password" : "newPassword",
+            "firstname" : "newFirstname",
+            "lastname" : "newLastname"
         }
     }
 

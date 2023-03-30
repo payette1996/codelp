@@ -3,6 +3,19 @@ require_once "./app/models/Database.php";
 require_once "./app/models/User.php";
 
 class UserController {
+    public static function auth(string $email, string $password) : ?User {
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":email", $email);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        if ($row && password_verify($password, $row["password"])) {
+            return new User($row);
+        } else {
+            return null;
+        }
+    }
+
     public static function getCount() : int {
         $sql = "SELECT COUNT(*) FROM users";
         $stmt = Database::pdo()->prepare($sql);
@@ -25,8 +38,8 @@ class UserController {
 
     public static function postUser(User $user) : bool {
         $sql = "
-            INSERT INTO users (email, username, firstname, lastname, password)
-            VALUES (:email, :username, :firstname, :lastname, :password)
+            INSERT INTO users (email, username, password, firstname, lastname)
+            VALUES (:email, :username, :password, :firstname, :lastname)
         ";
         $params = [
             ":email" => $user->getEmail(),
@@ -34,39 +47,40 @@ class UserController {
             ":password" => $user->getPassword(),
             ":firstname" => $user->getFirstname(),
             ":lastname" => $user->getLastname(),
+            ":email" => $user->getEmail()
         ];
         $stmt = Database::pdo()->prepare($sql);
         foreach ($params as $param => $value) $stmt->bindValue($param, $value);
         return $stmt->execute();
     }
 
-    public static function putUser(User $user) : bool {
+    public static function putUser(User $user, User $new) : bool {
         $sql = "
             UPDATE users
-            SET email = :email,
-            username = :username,
-            firstname = :firstname,
-            lastname = :lastname,
-            password = :password
-            WHERE id = :id
+            SET email = :newEmail,
+            username = :newUsername,
+            password = :newPassword,
+            firstname = :newFirstname,
+            lastname = :newLastname
+            WHERE email = :email
         ";
         $stmt = Database::pdo()->prepare($sql);
         $params = [
-            ":email" => $user->getEmail(),
-            ":username" => $user->getUsername(),
-            ":firstname" => $user->getFirstname(),
-            ":lastname" => $user->getLastname(),
-            ":password" => $user->getPassword(),
-            ":id" => $user->getId()
+            ":newEmail" => $new->getEmail(),
+            ":newUsername" => $new->getUsername(),
+            ":newPassword" => $new->getPassword(),
+            ":newFirstname" => $new->getFirstname(),
+            ":newLastname" => $new->getLastname(),
+            ":email" => $user->getEmail()
         ];
         foreach ($params as $param => $value) $stmt->bindValue($param, $value);
         return $stmt->execute();
     }
 
     public static function deleteUser(User $user) : bool {
-        $sql = "DELETE FOM users WHERE id = :id";
+        $sql = "DELETE FROM users WHERE email = :email";
         $stmt = Database::pdo()->prepare($sql);
-        $stmt->bindValue(":id", $user->getId());
+        $stmt->bindValue(":email", $user->getEmail());
         return $stmt->execute();
     }
 }
