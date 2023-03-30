@@ -75,13 +75,13 @@ BODY :
         "user": {
             "email" : "payette1996@gmail.com",
             "password" : "123"
-        }
+        },
         "thread": {
             "id" : 1
-        }
+        },
         "new: {
             "title" : "New Title",
-            "description" : "new description",
+            "description" : "new description"
         }
     }
 
@@ -94,7 +94,7 @@ BODY :
         "user": {
             "email" : "payette1996@gmail.com",
             "password" : "123"
-        }
+        },
         "thread": {
             "id" : 1
         }
@@ -128,13 +128,13 @@ BODY :
         "user": {
             "email" : "payette1996@gmail.com",
             "password" : "123"
-        }
+        },
         "post": {
             "id" : 1
-        }
+        },
         "new: {
             "title" : "New Title",
-            "description" : "new description",
+            "description" : "new description"
         }
     }
 
@@ -147,7 +147,7 @@ BODY :
         "user": {
             "email" : "payette1996@gmail.com",
             "password" : "123"
-        }
+        },
         "post": {
             "id" : 1
         }
