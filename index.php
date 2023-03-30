@@ -51,7 +51,7 @@ switch ($endpoint) {
                     $status ? http_response_code(201) : http_response_code(400);
                     echo json_encode($status);
                 } else {
-                    http_response_code(401);
+                    http_response_code(403);
                     echo json_encode(false);
                 }
                 break;
@@ -59,11 +59,16 @@ switch ($endpoint) {
                 header("Content-Type: application/json");
                 $json = file_get_contents("php://input");
                 $data = json_decode($json, true);
+                $rawPassword = $data["password"];
                 $user = new User($data);
-                if (UserController::auth($user)) {
+                $email = $user->getEmail();
+                if (UserController::auth($email, $rawPassword)) {
                     $status = UserController::deleteUser($user);
-                    $status ? http_response_code(204) : http_response_code(401);
+                    $status ? http_response_code(204) : http_response_code(400);
                     echo json_encode($status);
+                } else {
+                    http_response_code(403);
+                    echo json_encode(false);
                 }
                 break;
         }
