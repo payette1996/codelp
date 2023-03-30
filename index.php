@@ -63,8 +63,7 @@ switch ($endpoint) {
                 $data = json_decode($json, true);
                 $rawPassword = $data["password"];
                 $user = new User($data);
-                $email = $user->getEmail();
-                if (UserController::auth($email, $rawPassword)) {
+                if (UserController::auth($user->getEmail(), $rawPassword)) {
                     $status = UserController::deleteUser($user);
                     $status ? http_response_code(204) : http_response_code(400);
                     echo json_encode($status);
@@ -111,7 +110,7 @@ switch ($endpoint) {
                 $user = new User($data["user"]);
                 $thread = new Thread($data["thread"]);
                 $new = new Thread($data["new"]);
-                if (UserController::auth($email, $rawPassword)) {
+                if (UserController::auth($user->getEmail(), $rawPassword)) {
                     $status = ThreadController::putThread($thread, $new);
                     $status ? http_response_code(201) : http_response_code(400);
                     echo json_encode($status);
@@ -122,7 +121,19 @@ switch ($endpoint) {
                 break;
             case "DELETE":
                 header("Content-Type: application/json");
-                http_response_code(204);
+                $json = file_get_contents("php://input");
+                $data = json_decode($json, true);
+                $rawPassword = $data["user"]["password"];
+                $user = new User($data["user"]);
+                $thread = new Thread($data["thread"]);
+                if (UserController::auth($user->getEmail(), $rawPassword)) {
+                    $status = ThreadController::deleteThread($thread);
+                    $status ? http_response_code(204) : http_response_code(400);
+                    echo json_encode($status);
+                } else {
+                    http_response_code(403);
+                    echo json_encode(false);
+                }
                 break;
         }
         break;

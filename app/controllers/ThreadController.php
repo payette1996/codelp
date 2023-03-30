@@ -44,7 +44,7 @@ class ThreadController {
         $sql = "
             UPDATE threads
             SET title = :newTitle,
-            description = :newDescription,
+            description = :newDescription
             WHERE id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
@@ -58,7 +58,7 @@ class ThreadController {
     }
 
     public static function deleteThread(Thread $thread) : bool {
-        $sql = "DELETE FOM threads WHERE id = :id";
+        $sql = "DELETE FROM threads WHERE id = :id";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $thread->getId());
         return $stmt->execute();

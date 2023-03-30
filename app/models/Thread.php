@@ -8,10 +8,10 @@ class Thread {
     private string $username;
 
     public function __construct(array $data) {
-        $requiredKeys = ["title", "description", "userId"];
-        foreach ($requiredKeys as $key) {
-            if (!isset($data[$key])) throw new Exception("$key is required.");
-        }
+        // $requiredKeys = ["title", "description", "userId"];
+        // foreach ($requiredKeys as $key) {
+        //     if (!isset($data[$key])) throw new Exception("$key is required.");
+        // }
 
         foreach ($data as $key => $value) {
             $setter = "set" . ucfirst($key);

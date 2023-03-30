@@ -9,10 +9,10 @@ class User {
     private string $createdAt;
     
     public function __construct(array $data) {
-        $requiredKeys = ["email", "password"];
-        foreach ($requiredKeys as $key) {
-            if (!isset($data[$key])) throw new Exception("$key is required.");
-        }
+        // $requiredKeys = ["email", "password"];
+        // foreach ($requiredKeys as $key) {
+        //     if (!isset($data[$key])) throw new Exception("$key is required.");
+        // }
 
         foreach ($data as $key => $value) {
             $setter = "set" . ucfirst($key);
