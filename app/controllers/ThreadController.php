@@ -40,7 +40,7 @@ class ThreadController {
         return $result;
     }
 
-    public static function putThread(Thread $thread) : bool {
+    public static function putThread(Thread $thread, Thread $new) : bool {
         $sql = "
             UPDATE threads
             SET title = :newTitle,
@@ -49,8 +49,9 @@ class ThreadController {
         ";
         $stmt = Database::pdo()->prepare($sql);
         $params = [
-            ":newTitle" => $thread->getTitle(),
-            ":newDescription" => $thread->getDescription()
+            ":newTitle" => $new->getTitle(),
+            ":newDescription" => $new->getDescription(),
+            ":id" => $thread->getId()
         ];
         foreach ($params as $param => $value) $stmt->bindValue($param, $value);
         return $stmt->execute();

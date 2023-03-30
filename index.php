@@ -107,6 +107,18 @@ switch ($endpoint) {
                 header("Content-Type: application/json");
                 $json = file_get_contents("php://input");
                 $data = json_decode($json, true);
+                $rawPassword = $data["user"]["password"];
+                $user = new User($data["user"]);
+                $thread = new Thread($data["thread"]);
+                $new = new Thread($data["new"]);
+                if (UserController::auth($email, $rawPassword)) {
+                    $status = ThreadController::putThread($thread, $new);
+                    $status ? http_response_code(201) : http_response_code(400);
+                    echo json_encode($status);
+                } else {
+                    http_response_code(403);
+                    echo json_encode(false);
+                }
                 break;
             case "DELETE":
                 header("Content-Type: application/json");
