@@ -14,7 +14,7 @@ BODY : null
 ## POST User
 URI : .../users/
 BODY : 
-    <pre><code>
+    <code>
     {
         "email" : "payette1996@gmail.com",
         "username" : "payette1996",
@@ -22,7 +22,7 @@ BODY :
         "firstname" : "Louis",
         "lastname" : "Payette"
     }
-    </code></pre>
+    </code>
 
 ## PUT User
 ### 2 objects; 1: your email and password; 2: new desired details
