@@ -147,7 +147,7 @@ BODY :
         "post": {
             "id" : 1
         },
-        "new: {
+        "new": {
             "title" : "New Title",
             "description" : "new description"
         }

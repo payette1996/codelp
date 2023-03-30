@@ -43,17 +43,17 @@ class PostController {
         return $result;
     }
 
-    public static function putPost(Post $post) : bool {
+    public static function putPost(Post $post, Post $new) : bool {
         $sql = "
             UPDATE posts
-            SET title = :title,
-            description = :description,
+            SET title = :newTitle,
+            description = :newDescription
             WHERE id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
         $params = [
-            ":title" => $post->getTitle(),
-            ":description" => $post->getDescription(),
+            ":newTitle" => $new->getTitle(),
+            ":newDescription" => $new->getDescription(),
             ":id" => $post->getId()
         ];
         foreach ($params as $param => $value) $stmt->bindValue($param, $value);

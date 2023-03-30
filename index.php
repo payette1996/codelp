@@ -156,20 +156,32 @@ switch ($endpoint) {
                 }
                 break;
             case "POST":
+                header("Content-Type: application/json");
                 $json = file_get_contents("php://input");
                 $data = json_decode($json, true);
                 $post = new Post($data);
                 $status = PostController::postPost($post);
                 $status ? http_response_code(201) : http_response_code(400);
-                header("Content-Type: application/json");
                 echo json_encode($status);
                 break;
                 http_response_code(201);
-                header("Content-Type: application/json");
                 break;
             case "PUT":
-                http_response_code(200);
                 header("Content-Type: application/json");
+                $json = file_get_contents("php://input");
+                $data = json_decode($json, true);
+                $rawPassword = $data["user"]["password"];
+                $user = new User($data["user"]);
+                $post = new Post($data["post"]);
+                $new = new Post($data["new"]);
+                if (UserController::auth($user->getEmail(), $rawPassword)) {
+                    $status = PostController::putPost($post, $new);
+                    $status ? http_response_code(201) : http_response_code(400);
+                    echo json_encode($status);
+                } else {
+                    http_response_code(403);
+                    echo json_encode(false);
+                }
                 break;
             case "DELETE":
                 http_response_code(204);
