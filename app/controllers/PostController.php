@@ -13,8 +13,9 @@ class PostController {
 
     public static function getPost(int $id) : ?Post {
         $sql = "
-            SELECT id, title, description, user_id as userId, thread_id as threadId, created_at as createdAt
-            FROM posts WHERE id = :id
+            SELECT posts.*, users.username, posts.user_id AS userId, posts.thread_id AS threadId, posts.created_at AS createdAt
+            FROM posts JOIN users ON posts.user_id = users.id
+            WHERE posts.id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);

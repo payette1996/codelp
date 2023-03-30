@@ -70,6 +70,14 @@ class Post {
         $this->createdAt = $createdAt;
     }
 
+    public function getUsername() : string {
+        return $this->username;
+    }
+
+    public function setUsername(string $username) : void {
+        $this->username = $username;
+    }
+
     public function json() {
         $reflection = new ReflectionClass($this);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PRIVATE);

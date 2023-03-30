@@ -151,6 +151,7 @@ switch ($endpoint) {
                     }
                 } else {
                     $postCount = PostController::getCount();
+                    http_response_code(200);
                     echo json_encode($postCount);
                 }
                 break;
