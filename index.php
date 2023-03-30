@@ -23,9 +23,11 @@ switch ($endpoint) {
                         echo $user->json();
                     } else {
                         http_response_code(404);
+                        echo json_encode(false);
                     }
                 } else {
                     $userCount = UserController::getCount();
+                    http_response_code(200);
                     echo json_encode($userCount);
                 }
                 break;
