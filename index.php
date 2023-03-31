@@ -184,8 +184,20 @@ switch ($endpoint) {
                 }
                 break;
             case "DELETE":
-                http_response_code(204);
                 header("Content-Type: application/json");
+                $json = file_get_contents("php://input");
+                $data = json_decode($json, true);
+                $rawPassword = $data["user"]["password"];
+                $user = new User($data["user"]);
+                $post = new Post($data["post"]);
+                if (UserController::auth($user->getEmail(), $rawPassword)) {
+                    $status = PostController::deletePost($post);
+                    $status ? http_response_code(204) : http_response_code(400);
+                    echo json_encode($status);
+                } else {
+                    http_response_code(403);
+                    echo json_encode(false);
+                }
                 break;
         }
         break;

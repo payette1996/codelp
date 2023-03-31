@@ -61,7 +61,7 @@ class PostController {
     }
 
     public static function deletePost(Post $post) : bool {
-        $sql = "DELETE FOM Posts WHERE id = :id";
+        $sql = "DELETE FROM Posts WHERE id = :id";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $post->getId());
         return $stmt->execute();
