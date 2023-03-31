@@ -1,4 +1,7 @@
 <?php
+if(session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 require_once "./app/controllers/UserController.php";
 require_once "./app/controllers/ThreadController.php";
@@ -13,6 +16,19 @@ $parameter = $sections[3] ?? null;
 
 try {
     switch ($endpoint) {
+        case "auth":
+            header("Content-Type: application/json");
+            $json = file_get_contents("php://input");
+            $data = json_decode($json, true);
+            $user = UserController::auth($data["email"], $data["password"]);
+            if ($user) {
+                $response = ["authenticated" => true];
+                $_SESSION["user"] = serialize($user);
+            } else {
+                $response = ["authenticated" => false];
+            }
+            echo json_encode($response);
+            break;
         case "users":
             switch ($method) {
                 case "GET":
