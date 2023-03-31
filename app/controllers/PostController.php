@@ -43,28 +43,60 @@ class PostController {
         return $result;
     }
 
-    public static function putPost(Post $post, Post $new) : bool {
+    public static function putPost(User $user, Post $post, Post $new) : bool {
         $sql = "
-            UPDATE posts
-            SET title = :newTitle,
-            description = :newDescription
-            WHERE id = :id
+            SELECT users.id, posts.user_id FROM users, posts
+            WHERE users.email = :email AND posts.id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
-        $params = [
-            ":newTitle" => $new->getTitle(),
-            ":newDescription" => $new->getDescription(),
-            ":id" => $post->getId()
-        ];
-        foreach ($params as $param => $value) $stmt->bindValue($param, $value);
-        return $stmt->execute();
+        $stmt->bindValue(":email", $user->getEmail());
+        $stmt->bindValue(":id", $post->getId());
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $user->setId($row["id"]);
+        $post->setUserId($row["user_id"]);
+
+        if ($post->getUserId() === $user->getId()) {
+            $sql = "
+                UPDATE posts
+                SET title = :newTitle,
+                description = :newDescription
+                WHERE id = :id
+            ";
+            $stmt = Database::pdo()->prepare($sql);
+            $params = [
+                ":newTitle" => $new->getTitle(),
+                ":newDescription" => $new->getDescription(),
+                ":id" => $post->getId()
+            ];
+            foreach ($params as $param => $value) $stmt->bindValue($param, $value);
+            return $stmt->execute();
+        } else {
+            return false;
+        }
     }
 
-    public static function deletePost(Post $post) : bool {
-        $sql = "DELETE FROM Posts WHERE id = :id";
+    public static function deletePost(User $user, Post $post) : bool {
+        $sql = "
+            SELECT users.id, posts.user_id FROM users, posts
+            WHERE users.email = :email AND posts.id = :id
+        ";
         $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":email", $user->getEmail());
         $stmt->bindValue(":id", $post->getId());
-        return $stmt->execute();
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $user->setId($row["id"]);
+        $post->setUserId($row["user_id"]);
+
+        if ($post->getUserId() === $user->getId()) {
+            $sql = "DELETE FROM Posts WHERE id = :id";
+            $stmt = Database::pdo()->prepare($sql);
+            $stmt->bindValue(":id", $post->getId());
+            return $stmt->execute();
+        } else {
+            return false;
+        }
     }
 }
 ?>

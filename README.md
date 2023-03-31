@@ -69,9 +69,15 @@ URI : .../threads
 BODY : 
     <pre>
     {
-        "title" : "My Thread Title",
-        "description" : "My thread description",
-        "userId" : 1
+        "user": {
+            "email" : "payette1996@gmail.com",
+            "password" : "123"
+        },
+        "thread": {
+            "title" : "My Thread Title",
+            "description" : "My thread description",
+            "userId" : 1
+        }
     }
     </pre>
 
@@ -127,10 +133,16 @@ URI : .../threads
 BODY : 
     <pre>
     {
-        "title" : "My Post Title",
-        "description" : "My post description",
-        "userId" : 1,
-        "threadId" : 1
+        "user": {
+            "email" : "payette1996@gmail.com",
+            "password" : "123"
+        },
+        "post": {
+            "title" : "My Post Title",
+            "description" : "My post description",
+            "userId" : 1,
+            "threadId" : 1
+        }
     }
     </pre>
 

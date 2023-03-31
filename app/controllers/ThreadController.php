@@ -24,7 +24,23 @@ class ThreadController {
         return $result ? new Thread($result) : null;
     }
 
-    public static function postThread(Thread $thread) : bool {
+    public static function postThread(User $user, Thread $thread) : bool {
+        $sql = "
+            SELECT users.id, threads.user_id FROM users, threads
+            WHERE users.email = :email AND threads.id = :id
+        ";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":email", $user->getEmail());
+        $stmt->bindValue(":id", $thread->getId());
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $user->setId($row["id"]);
+        $thread->setUserId($row["user_id"]);
+
+        if ($thread->getUserId() === $user->getId()) {
+
+        }
+
         $sql = "
             INSERT INTO threads (title, description, user_id)
             VALUES (:title, :description, :user_id)
@@ -68,8 +84,9 @@ class ThreadController {
             ];
             foreach ($params as $param => $value) $stmt->bindValue($param, $value);
             return $stmt->execute();
+        } else {
+            return false;
         }
-        return false;
     }
 
     public static function deleteThread(User $user, Thread $thread) : bool {
@@ -90,6 +107,8 @@ class ThreadController {
             $stmt = Database::pdo()->prepare($sql);
             $stmt->bindValue(":id", $thread->getId());
             return $stmt->execute();
+        } else {
+            return false;
         }
     }
 }

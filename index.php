@@ -175,7 +175,7 @@ switch ($endpoint) {
                 $post = new Post($data["post"]);
                 $new = new Post($data["new"]);
                 if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = PostController::putPost($post, $new);
+                    $status = PostController::putPost($user, $post, $new);
                     $status ? http_response_code(201) : http_response_code(400);
                     echo json_encode($status);
                 } else {
@@ -191,7 +191,7 @@ switch ($endpoint) {
                 $user = new User($data["user"]);
                 $post = new Post($data["post"]);
                 if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = PostController::deletePost($post);
+                    $status = PostController::deletePost($user, $post);
                     $status ? http_response_code(204) : http_response_code(400);
                     echo json_encode($status);
                 } else {
