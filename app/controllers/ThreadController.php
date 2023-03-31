@@ -25,21 +25,12 @@ class ThreadController {
     }
 
     public static function postThread(User $user, Thread $thread) : bool {
-        $sql = "
-            SELECT users.id, threads.user_id FROM users, threads
-            WHERE users.email = :email AND threads.id = :id
-        ";
+        $sql = "SELECT id FROM users WHERE email = :email";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":email", $user->getEmail());
-        $stmt->bindValue(":id", $thread->getId());
         $stmt->execute();
-        $row = $stmt->fetch();
-        $user->setId($row["id"]);
-        $thread->setUserId($row["user_id"]);
-
-        if ($thread->getUserId() === $user->getId()) {
-
-        }
+        $id = $stmt->fetchColumn();
+        $user->setId($id);
 
         $sql = "
             INSERT INTO threads (title, description, user_id)
@@ -48,7 +39,7 @@ class ThreadController {
         $params = [
             ":title" => $thread->getTitle(),
             ":description" => $thread->getDescription(),
-            ":user_id" => $thread->getUserId(),
+            ":user_id" => $user->getId(),
         ];
         $stmt = Database::pdo()->prepare($sql);
         foreach ($params as $param => $value) $stmt->bindValue($param, $value);

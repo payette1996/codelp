@@ -75,7 +75,7 @@ BODY :
         },
         "thread": {
             "title" : "My Thread Title",
-            "description" : "My thread description",
+            "description" : "My thread description"
         }
     }
     </pre>

@@ -97,10 +97,17 @@ switch ($endpoint) {
                 header("Content-Type: application/json");
                 $json = file_get_contents("php://input");
                 $data = json_decode($json, true);
-                $thread = new Thread($data);
-                $status = ThreadController::postThread($thread);
-                $status ? http_response_code(201) : http_response_code(400);
-                echo json_encode($status);
+                $rawPassword = $data["user"]["password"];
+                $user = new User($data["user"]);
+                $thread = new Thread($data["thread"]);
+                if (UserController::auth($user->getEmail(), $rawPassword)) {
+                    $status = ThreadController::postThread($user, $thread);
+                    $status ? http_response_code(201) : http_response_code(400);
+                    echo json_encode($status);
+                } else {
+                    http_response_code(403);
+                    echo json_encode(false);
+                }
                 break;
             case "PUT":
                 header("Content-Type: application/json");
