@@ -11,210 +11,220 @@ $sections = explode("/", $uri);
 $endpoint = $sections[2] ?? null;
 $parameter = $sections[3] ?? null;
 
-switch ($endpoint) {
-    case "users":
-        switch ($method) {
-            case "GET":
-                header("Content-Type: application/json");
-                if ($parameter) {
-                    $user = UserController::getUser($parameter);
-                    if ($user) {
-                        http_response_code(200);
-                        echo $user->json();
+try {
+    switch ($endpoint) {
+        case "users":
+            switch ($method) {
+                case "GET":
+                    header("Content-Type: application/json");
+                    if ($parameter) {
+                        $user = UserController::getUser($parameter);
+                        if ($user) {
+                            http_response_code(200);
+                            echo $user->json();
+                        } else {
+                            http_response_code(404);
+                            echo json_encode(false);
+                        }
                     } else {
-                        http_response_code(404);
+                        $userCount = UserController::getCount();
+                        http_response_code(200);
+                        echo json_encode($userCount);
+                    }
+                    break;
+                case "POST":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $user = new User($data);
+                    $status = UserController::postUser($user);
+                    $status ? http_response_code(201) : http_response_code(400);
+                    echo json_encode($status);
+                    break;
+                case "PUT":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["user"]["password"];
+                    $user = new User($data["user"]);
+                    $email = $user->getEmail();
+                    $new = new User($data["new"]);
+                    if (UserController::auth($email, $rawPassword)) {
+                        $status = UserController::putUser($user, $new);
+                        $status ? http_response_code(201) : http_response_code(400);
+                        echo json_encode($status);
+                    } else {
+                        http_response_code(403);
                         echo json_encode(false);
                     }
-                } else {
-                    $userCount = UserController::getCount();
-                    http_response_code(200);
-                    echo json_encode($userCount);
-                }
-                break;
-            case "POST":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $user = new User($data);
-                $status = UserController::postUser($user);
-                $status ? http_response_code(201) : http_response_code(400);
-                echo json_encode($status);
-                break;
-            case "PUT":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["user"]["password"];
-                $user = new User($data["user"]);
-                $email = $user->getEmail();
-                $new = new User($data["new"]);
-                if (UserController::auth($email, $rawPassword)) {
-                    $status = UserController::putUser($user, $new);
-                    $status ? http_response_code(201) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    echo json_encode(false);
-                }
-                break;
-            case "DELETE":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["password"];
-                $user = new User($data);
-                if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = UserController::deleteUser($user);
-                    $status ? http_response_code(204) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    echo json_encode(false);
-                }
-                break;
-        }
-        break;
-    case "threads":
-        switch ($method) {
-            case "GET":
-                header("Content-Type: application/json");
-                if ($parameter) {
-                    $thread = ThreadController::getThread($parameter);
-                    if ($thread) {
-                        http_response_code(200);
-                        echo $thread->json();
+                    break;
+                case "DELETE":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["password"];
+                    $user = new User($data);
+                    if (UserController::auth($user->getEmail(), $rawPassword)) {
+                        $status = UserController::deleteUser($user);
+                        $status ? http_response_code(204) : http_response_code(400);
+                        echo json_encode($status);
                     } else {
-                        http_response_code(404);
+                        http_response_code(403);
                         echo json_encode(false);
                     }
-                } else {
-                    $threadCount = ThreadController::getCount();
-                    http_response_code(200);
-                    echo json_encode($threadCount);
-                }
-                break;
-            case "POST":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["user"]["password"];
-                $user = new User($data["user"]);
-                $thread = new Thread($data["thread"]);
-                if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = ThreadController::postThread($user, $thread);
-                    $status ? http_response_code(201) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    echo json_encode(false);
-                }
-                break;
-            case "PUT":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["user"]["password"];
-                $user = new User($data["user"]);
-                $thread = new Thread($data["thread"]);
-                $new = new Thread($data["new"]);
-                if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = ThreadController::putThread($user, $thread, $new);
-                    $status ? http_response_code(201) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    echo json_encode(false);
-                }
-                break;
-            case "DELETE":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["user"]["password"];
-                $user = new User($data["user"]);
-                $thread = new Thread($data["thread"]);
-                if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = ThreadController::deleteThread($user, $thread);
-                    $status ? http_response_code(204) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    echo json_encode(false);
-                }
-                break;
-        }
-        break;
-    case "posts":
-        switch ($method) {
-            case "GET":
-                header("Content-Type: application/json");
-                if ($parameter) {
-                    $post = PostController::getPost($parameter);
-                    if ($post) {
-                        http_response_code(200);
-                        echo $post->json();
+                    break;
+            }
+            break;
+        case "threads":
+            switch ($method) {
+                case "GET":
+                    header("Content-Type: application/json");
+                    if ($parameter) {
+                        $thread = ThreadController::getThread($parameter);
+                        if ($thread) {
+                            http_response_code(200);
+                            echo $thread->json();
+                        } else {
+                            http_response_code(404);
+                            echo json_encode(false);
+                        }
                     } else {
-                        http_response_code(404);
+                        $threadCount = ThreadController::getCount();
+                        http_response_code(200);
+                        echo json_encode($threadCount);
                     }
-                } else {
-                    $postCount = PostController::getCount();
-                    http_response_code(200);
-                    echo json_encode($postCount);
-                }
-                break;
-            case "POST":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["user"]["password"];
-                $user = new User($data["user"]);
-                $post = new Post($data["post"]);
-                if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = PostController::postPost($user, $post);
-                    $status ? http_response_code(201) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    return false;
-                }
-                break;
-            case "PUT":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["user"]["password"];
-                $user = new User($data["user"]);
-                $post = new Post($data["post"]);
-                $new = new Post($data["new"]);
-                if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = PostController::putPost($user, $post, $new);
-                    $status ? http_response_code(201) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    echo json_encode(false);
-                }
-                break;
-            case "DELETE":
-                header("Content-Type: application/json");
-                $json = file_get_contents("php://input");
-                $data = json_decode($json, true);
-                $rawPassword = $data["user"]["password"];
-                $user = new User($data["user"]);
-                $post = new Post($data["post"]);
-                if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = PostController::deletePost($user, $post);
-                    $status ? http_response_code(204) : http_response_code(400);
-                    echo json_encode($status);
-                } else {
-                    http_response_code(403);
-                    echo json_encode(false);
-                }
-                break;
-        }
-        break;
-    default:
-        require_once "./app/views/app.html";
-        break;
+                    break;
+                case "POST":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["user"]["password"];
+                    $user = new User($data["user"]);
+                    $thread = new Thread($data["thread"]);
+                    if (UserController::auth($user->getEmail(), $rawPassword)) {
+                        $status = ThreadController::postThread($user, $thread);
+                        $status ? http_response_code(201) : http_response_code(400);
+                        echo json_encode($status);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(false);
+                    }
+                    break;
+                case "PUT":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["user"]["password"];
+                    $user = new User($data["user"]);
+                    $thread = new Thread($data["thread"]);
+                    $new = new Thread($data["new"]);
+                    if (UserController::auth($user->getEmail(), $rawPassword)) {
+                        $status = ThreadController::putThread($user, $thread, $new);
+                        $status ? http_response_code(201) : http_response_code(400);
+                        echo json_encode($status);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(false);
+                    }
+                    break;
+                case "DELETE":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["user"]["password"];
+                    $user = new User($data["user"]);
+                    $thread = new Thread($data["thread"]);
+                    if (UserController::auth($user->getEmail(), $rawPassword)) {
+                        $status = ThreadController::deleteThread($user, $thread);
+                        $status ? http_response_code(204) : http_response_code(400);
+                        echo json_encode($status);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(false);
+                    }
+                    break;
+            }
+            break;
+        case "posts":
+            switch ($method) {
+                case "GET":
+                    header("Content-Type: application/json");
+                    if ($parameter) {
+                        $post = PostController::getPost($parameter);
+                        if ($post) {
+                            http_response_code(200);
+                            echo $post->json();
+                        } else {
+                            http_response_code(404);
+                        }
+                    } else {
+                        $postCount = PostController::getCount();
+                        http_response_code(200);
+                        echo json_encode($postCount);
+                    }
+                    break;
+                case "POST":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["user"]["password"];
+                    $user = new User($data["user"]);
+                    $post = new Post($data["post"]);
+                    if (UserController::auth($user->getEmail(), $rawPassword)) {
+                        $status = PostController::postPost($user, $post);
+                        $status ? http_response_code(201) : http_response_code(400);
+                        echo json_encode($status);
+                    } else {
+                        http_response_code(403);
+                        return false;
+                    }
+                    break;
+                case "PUT":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["user"]["password"];
+                    $user = new User($data["user"]);
+                    $post = new Post($data["post"]);
+                    $new = new Post($data["new"]);
+                    if (UserController::auth($user->getEmail(), $rawPassword)) {
+                        $status = PostController::putPost($user, $post, $new);
+                        $status ? http_response_code(201) : http_response_code(400);
+                        echo json_encode($status);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(false);
+                    }
+                    break;
+                case "DELETE":
+                    header("Content-Type: application/json");
+                    $json = file_get_contents("php://input");
+                    $data = json_decode($json, true);
+                    $rawPassword = $data["user"]["password"];
+                    $user = new User($data["user"]);
+                    $post = new Post($data["post"]);
+                    if (UserController::auth($user->getEmail(), $rawPassword)) {
+                        $status = PostController::deletePost($user, $post);
+                        $status ? http_response_code(204) : http_response_code(400);
+                        echo json_encode($status);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(false);
+                    }
+                    break;
+            }
+            break;
+        default:
+            require_once "./app/views/app.html";
+            break;
+    }
+} catch (Error $e) {
+    header("Content-Type: application/json");
+    http_response_code(500);
+    echo json_encode(false);
+} catch (Exception $e) {
+    header("Content-Type: application/json");
+    http_response_code(500);
+    echo json_encode(false);
 }
 ?>
