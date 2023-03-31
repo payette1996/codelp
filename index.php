@@ -111,7 +111,7 @@ switch ($endpoint) {
                 $thread = new Thread($data["thread"]);
                 $new = new Thread($data["new"]);
                 if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = ThreadController::putThread($thread, $new);
+                    $status = ThreadController::putThread($user, $thread, $new);
                     $status ? http_response_code(201) : http_response_code(400);
                     echo json_encode($status);
                 } else {
@@ -127,7 +127,7 @@ switch ($endpoint) {
                 $user = new User($data["user"]);
                 $thread = new Thread($data["thread"]);
                 if (UserController::auth($user->getEmail(), $rawPassword)) {
-                    $status = ThreadController::deleteThread($thread);
+                    $status = ThreadController::deleteThread($user, $thread);
                     $status ? http_response_code(204) : http_response_code(400);
                     echo json_encode($status);
                 } else {

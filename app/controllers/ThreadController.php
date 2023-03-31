@@ -40,28 +40,57 @@ class ThreadController {
         return $result;
     }
 
-    public static function putThread(Thread $thread, Thread $new) : bool {
+    public static function putThread(User $user, Thread $thread, Thread $new) : bool {
         $sql = "
-            UPDATE threads
-            SET title = :newTitle,
-            description = :newDescription
-            WHERE id = :id
+            SELECT users.id, threads.user_id FROM users, threads
+            WHERE users.email = :email AND threads.id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
-        $params = [
-            ":newTitle" => $new->getTitle(),
-            ":newDescription" => $new->getDescription(),
-            ":id" => $thread->getId()
-        ];
-        foreach ($params as $param => $value) $stmt->bindValue($param, $value);
-        return $stmt->execute();
+        $stmt->bindValue(":email", $user->getEmail());
+        $stmt->bindValue(":id", $thread->getId());
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $user->setId($row["id"]);
+        $thread->setUserId($row["user_id"]);
+
+        if ($thread->getUserId() === $user->getId()) {
+            $sql = "
+                UPDATE threads
+                SET title = :newTitle,
+                description = :newDescription
+                WHERE id = :id
+            ";
+            $stmt = Database::pdo()->prepare($sql);
+            $params = [
+                ":newTitle" => $new->getTitle(),
+                ":newDescription" => $new->getDescription(),
+                ":id" => $thread->getId()
+            ];
+            foreach ($params as $param => $value) $stmt->bindValue($param, $value);
+            return $stmt->execute();
+        }
+        return false;
     }
 
-    public static function deleteThread(Thread $thread) : bool {
-        $sql = "DELETE FROM threads WHERE id = :id";
+    public static function deleteThread(User $user, Thread $thread) : bool {
+        $sql = "
+            SELECT users.id, threads.user_id FROM users, threads
+            WHERE users.email = :email AND threads.id = :id
+        ";
         $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":email", $user->getEmail());
         $stmt->bindValue(":id", $thread->getId());
-        return $stmt->execute();
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $user->setId($row["id"]);
+        $thread->setUserId($row["user_id"]);
+
+        if ($thread->getUserId() === $user->getId()) {
+            $sql = "DELETE FROM threads WHERE id = :id";
+            $stmt = Database::pdo()->prepare($sql);
+            $stmt->bindValue(":id", $thread->getId());
+            return $stmt->execute();
+        }
     }
 }
 ?>
