@@ -76,7 +76,6 @@ BODY :
         "thread": {
             "title" : "My Thread Title",
             "description" : "My thread description",
-            "userId" : 1
         }
     }
     </pre>
@@ -140,7 +139,6 @@ BODY :
         "post": {
             "title" : "My Post Title",
             "description" : "My post description",
-            "userId" : 1,
             "threadId" : 1
         }
     }
