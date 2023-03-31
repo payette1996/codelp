@@ -166,12 +166,17 @@ switch ($endpoint) {
                 header("Content-Type: application/json");
                 $json = file_get_contents("php://input");
                 $data = json_decode($json, true);
-                $post = new Post($data);
-                $status = PostController::postPost($post);
-                $status ? http_response_code(201) : http_response_code(400);
-                echo json_encode($status);
-                break;
-                http_response_code(201);
+                $rawPassword = $data["user"]["password"];
+                $user = new User($data["user"]);
+                $post = new Post($data["post"]);
+                if (UserController::auth($user->getEmail(), $rawPassword)) {
+                    $status = PostController::postPost($user, $post);
+                    $status ? http_response_code(201) : http_response_code(400);
+                    echo json_encode($status);
+                } else {
+                    http_response_code(403);
+                    return false;
+                }
                 break;
             case "PUT":
                 header("Content-Type: application/json");

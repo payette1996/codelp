@@ -26,7 +26,14 @@ class PostController {
         return $result ? new Post($result) : null;
     }
 
-    public static function postPost(Post $post) : bool {
+    public static function postPost(User $user, Post $post) : bool {
+        $sql = "SELECT id FROM users WHERE email = :email";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":email", $user->getEmail());
+        $stmt->execute();
+        $id = $stmt->fetchColumn();
+        $user->setId($id);
+
         $sql = "
             INSERT INTO posts (title, description, user_id, thread_id)
             VALUES (:title, :description, :user_id, :thread_id)
@@ -34,7 +41,7 @@ class PostController {
         $params = [
             ":title" => $post->getTitle(),
             ":description" => $post->getDescription(),
-            ":user_id" => $post->getUserId(),
+            ":user_id" => $user->getId(),
             ":thread_id" => $post->getThreadId()
         ];
         $stmt = Database::pdo()->prepare($sql);
