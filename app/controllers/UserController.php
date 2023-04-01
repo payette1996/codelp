@@ -16,10 +16,16 @@ class UserController {
         }
     }
 
+    public static function getAll() : array {
+        $sql = "SELECT id, username, firstname, lastname, created_at AS createdAt FROM users";
+        $stmt = Database::pdo()->query($sql);
+        $users = $stmt->fetchAll();
+        return $users;
+    }
+
     public static function getCount() : int {
         $sql = "SELECT COUNT(*) FROM users";
-        $stmt = Database::pdo()->prepare($sql);
-        $stmt->execute();
+        $stmt = Database::pdo()->query($sql);
         $count = $stmt->fetchColumn();
         return $count;
     }

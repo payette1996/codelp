@@ -3,10 +3,16 @@ require_once "./app/models/Database.php";
 require_once "./app/models/Thread.php";
 
 class ThreadController {
+    public static function getAll() : array {
+        $sql = "SELECT id, title, description, user_id AS userId, created_at AS createdAt FROM threads";
+        $stmt = Database::pdo()->query($sql);
+        $threads = $stmt->fetchAll();
+        return $threads;
+    }
+
     public static function getCount() : int {
         $sql = "SELECT COUNT(*) FROM threads";
-        $stmt = Database::pdo()->prepare($sql);
-        $stmt->execute();
+        $stmt = Database::pdo()->query($sql);
         $count = $stmt->fetchColumn();
         return $count;
     }

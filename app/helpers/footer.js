@@ -3,7 +3,7 @@ window.footer.threadCount = document.querySelector("#threadCount");
 window.footer.postCount = document.querySelector("#postCount");
 
 async function getCount(entity) {
-    const response = await fetch(`/codelp/${entity}`);
+    const response = await fetch(`/codelp/${entity}/count`);
     if (response.ok) return await response.json();
 };
 

@@ -58,7 +58,7 @@ try {
             switch ($method) {
                 case "GET":
                     header("Content-Type: application/json");
-                    if ($parameter) {
+                    if ($parameter && $parameter !== "count") {
                         $user = UserController::getUser($parameter);
                         if ($user) {
                             http_response_code(200);
@@ -67,10 +67,14 @@ try {
                             http_response_code(404);
                             echo json_encode(false);
                         }
-                    } else {
+                    } elseif ($parameter === "count") {
                         $userCount = UserController::getCount();
                         http_response_code(200);
                         echo json_encode($userCount);
+                    } else {
+                        $users = UserController::getAll();
+                        http_response_code(200);
+                        echo json_encode($users);
                     }
                     break;
                 case "POST":
@@ -120,7 +124,7 @@ try {
             switch ($method) {
                 case "GET":
                     header("Content-Type: application/json");
-                    if ($parameter) {
+                    if ($parameter && $parameter !== "count") {
                         $thread = ThreadController::getThread($parameter);
                         if ($thread) {
                             http_response_code(200);
@@ -129,10 +133,14 @@ try {
                             http_response_code(404);
                             echo json_encode(false);
                         }
-                    } else {
+                    } elseif ($parameter === "count") {
                         $threadCount = ThreadController::getCount();
                         http_response_code(200);
                         echo json_encode($threadCount);
+                    } else {
+                        $threads = ThreadController::getAll();
+                        http_response_code(200);
+                        echo json_encode($threads);
                     }
                     break;
                 case "POST":
@@ -190,7 +198,7 @@ try {
             switch ($method) {
                 case "GET":
                     header("Content-Type: application/json");
-                    if ($parameter) {
+                    if ($parameter && $parameter !== "count") {
                         $post = PostController::getPost($parameter);
                         if ($post) {
                             http_response_code(200);
@@ -198,10 +206,14 @@ try {
                         } else {
                             http_response_code(404);
                         }
-                    } else {
+                    } elseif ($parameter === "count") {
                         $postCount = PostController::getCount();
                         http_response_code(200);
                         echo json_encode($postCount);
+                    } else {
+                        $posts = PostController::getAll();
+                        http_response_code(200);
+                        echo json_encode($posts);
                     }
                     break;
                 case "POST":

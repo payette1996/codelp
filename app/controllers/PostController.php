@@ -3,10 +3,16 @@ require_once "./app/models/Database.php";
 require_once "./app/models/Post.php";
 
 class PostController {
+    public static function getAll() : array {
+        $sql = "SELECT id, title, description, user_id AS userId, thread_id AS threadId, created_at AS createdAt FROM posts";
+        $stmt = Database::pdo()->query($sql);
+        $posts = $stmt->fetchAll();
+        return $posts;
+    }
+
     public static function getCount() : int {
         $sql = "SELECT COUNT(*) FROM posts";
-        $stmt = Database::pdo()->prepare($sql);
-        $stmt->execute();
+        $stmt = Database::pdo()->query($sql);
         $count = $stmt->fetchColumn();
         return $count;
     }
