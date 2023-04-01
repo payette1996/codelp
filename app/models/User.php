@@ -73,14 +73,10 @@ class User {
         $this->createdAt = $date;
     }
 
-    public function json() {
-        $reflection = new ReflectionClass($this);
-        $properties = $reflection->getProperties(ReflectionProperty::IS_PRIVATE);
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            $data[$property->getName()] = $property->getValue($this);
-        }
-        return json_encode($data);
+    public function json(bool $decoded = false) : array|string {
+        $data = get_object_vars($this);
+        unset($data["password"]);
+        return $decoded ? $data : json_encode($data);
     }
 }
 ?>

@@ -14,7 +14,7 @@ $sections = explode("/", $uri);
 $endpoint = $sections[2] ?? null;
 $parameter = $sections[3] ?? null;
 
-try {
+//try {
     switch ($endpoint) {
         case "auth":
             header("Content-Type: application/json");
@@ -22,7 +22,10 @@ try {
             $data = json_decode($json, true);
             $user = UserController::auth($data["email"], $data["password"]);
             if ($user) {
-                $response = ["authenticated" => true];
+                $response = [
+                    "authenticated" => true,
+                    "user" => $user->json(true)
+                ];
                 $_SESSION["user"] = serialize($user);
             } else {
                 $response = ["authenticated" => false];
@@ -234,13 +237,9 @@ try {
             require_once "./app/views/app.html";
             break;
     }
-} catch (Error $e) {
-    header("Content-Type: application/json");
-    http_response_code(500);
-    echo json_encode(false);
-} catch (Exception $e) {
-    header("Content-Type: application/json");
-    http_response_code(500);
-    echo json_encode(false);
-}
+// } catch (Throwable $e) {
+//     header("Content-Type: application/json");
+//     http_response_code(400);
+//     echo json_encode(false);
+// }
 ?>
