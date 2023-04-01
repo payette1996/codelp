@@ -18,7 +18,9 @@ loginForm.addEventListener("submit", async event => {
     if (response.ok) {
         const responseJson = await response.json();
         if (responseJson.authenticated === true) {
-            console.log(`Welcome back ${responseJson.user.firstname}`);
+            window.user = responseJson.user;
+            view.call(window.nav, "nav");
+            view.call(window.main, "main");
         } else {
             console.log("Wrong combination");
         }

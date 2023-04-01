@@ -14,7 +14,7 @@ $sections = explode("/", $uri);
 $endpoint = $sections[2] ?? null;
 $parameter = $sections[3] ?? null;
 
-//try {
+try {
     switch ($endpoint) {
         case "auth":
             header("Content-Type: application/json");
@@ -27,10 +27,32 @@ $parameter = $sections[3] ?? null;
                     "user" => $user->json(true)
                 ];
                 $_SESSION["user"] = serialize($user);
+
             } else {
                 $response = ["authenticated" => false];
             }
             echo json_encode($response);
+            break;
+        case "session":
+            switch ($method) {
+                case "GET":
+                    header("Content-Type: application/json");
+                    http_response_code(200);
+                    if (isset($_SESSION["user"])) {
+                        $unserializedUser = unserialize($_SESSION["user"]);
+                        echo json_encode($unserializedUser->json(true));
+                    } else {
+                        echo json_encode(false);
+                    }
+                    break;
+                case "POST":
+                    header("Content-Type: application/json");
+                    $_SESSION = array();
+                    session_destroy();
+                    http_response_code(204);
+                    break;
+            }
+
             break;
         case "users":
             switch ($method) {
@@ -237,9 +259,9 @@ $parameter = $sections[3] ?? null;
             require_once "./app/views/app.html";
             break;
     }
-// } catch (Throwable $e) {
-//     header("Content-Type: application/json");
-//     http_response_code(400);
-//     echo json_encode(false);
-// }
+} catch (Throwable $e) {
+    header("Content-Type: application/json");
+    http_response_code(400);
+    echo json_encode(false);
+}
 ?>

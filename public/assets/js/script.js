@@ -4,6 +4,13 @@ window.nav = document.querySelector("nav");
 window.main = document.querySelector("main");
 window.footer = document.querySelector("footer");
 
+async function session() {
+    const response = await fetch("/codelp/session", {
+        "Cache-Control": "no-cache"
+    })
+    response.ok ? window.user = await response.json() : null;
+}
+
 async function view(view) {
     const fetchedView = await fetch(`app/views/${view}.html`, {
         headers: { 'Cache-Control': 'no-cache' }
@@ -24,6 +31,8 @@ async function view(view) {
         console.log("Failed to fetch view.");
     }
 }
+
+session();
 
 view.call(window.nav, "nav");
 view.call(window.main, "main");
