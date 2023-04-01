@@ -83,10 +83,6 @@ input:focus {
     flex-direction: row;
 }
 
-.col {
-
-}
-
 .d-flex {
     display: flex;
 }
@@ -109,4 +105,9 @@ input:focus {
 
 .p-1 {
     padding: 1rem;
+}
+
+.list-none {
+    list-style: none;
+    padding: 0;
 }
