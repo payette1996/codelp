@@ -77,6 +77,16 @@ input:focus {
     margin: 0 auto;
 }
 
+.row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+
+}
+
 .d-flex {
     display: flex;
 }
