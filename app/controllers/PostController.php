@@ -4,7 +4,10 @@ require_once "./app/models/Post.php";
 
 class PostController {
     public static function getAll() : array {
-        $sql = "SELECT id, title, description, user_id AS userId, thread_id AS threadId, created_at AS createdAt FROM posts";
+        $sql = "
+            SELECT id, title, description, user_id AS userId, thread_id AS threadId, created_at AS createdAt
+            FROM posts ORDER BY id DESC
+        ";
         $stmt = Database::pdo()->query($sql);
         $posts = $stmt->fetchAll();
         return $posts;

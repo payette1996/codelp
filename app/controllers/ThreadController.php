@@ -4,7 +4,10 @@ require_once "./app/models/Thread.php";
 
 class ThreadController {
     public static function getAll() : array {
-        $sql = "SELECT id, title, description, user_id AS userId, created_at AS createdAt FROM threads";
+        $sql = "
+            SELECT id, title, description, user_id AS userId, created_at AS createdAt
+            FROM threads ORDER BY id DESC
+        ";
         $stmt = Database::pdo()->query($sql);
         $threads = $stmt->fetchAll();
         return $threads;

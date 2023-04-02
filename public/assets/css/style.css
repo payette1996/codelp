@@ -24,6 +24,10 @@ nav {
     line-height: 4rem;
 }
 
+label {
+    display: block;
+}
+
 nav * {
     align-self: center;
 }
@@ -77,6 +81,10 @@ input:focus {
     margin: 0 auto;
 }
 
+.w-100 {
+    width: 100%;
+}
+
 .row {
     width: 100%;
     display: flex;
@@ -101,6 +109,10 @@ input:focus {
 
 .align-items-center {
     align-items: center;
+}
+
+.mt-1 {
+    margin-top: 1rem;
 }
 
 .me-1 {

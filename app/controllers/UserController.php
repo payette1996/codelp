@@ -17,7 +17,10 @@ class UserController {
     }
 
     public static function getAll() : array {
-        $sql = "SELECT id, username, firstname, lastname, created_at AS createdAt FROM users";
+        $sql = "
+            SELECT id, username, firstname, lastname, created_at AS createdAt
+            FROM users ORDER BY id DESC
+        ";
         $stmt = Database::pdo()->query($sql);
         $users = $stmt->fetchAll();
         return $users;
