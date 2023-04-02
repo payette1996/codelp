@@ -5,26 +5,52 @@ window.main.threadForm = document.querySelector("#threadForm");
 threadForm.hidden = !window.user;
 
 async function getUsers() {
-    const response = await fetch("/codelp/users");
+    const response = await fetch("/codelp/users", {
+        headers: {"Cache-Control": "no-cache"}
+    });
     if (response.ok) return await response.json();
 };
 
-getUsers().then(users => {
-    users.forEach(user => {
-            window.main.usersUl.innerHTML += `<li data-user-id="${user.id}">${user.username}</li>`;
+getUsers()
+    .then(users => {
+        users.forEach(user => {
+            window.main.usersUl.innerHTML += `<li class="text-link" data-user-id="${user.id}">${user.username}</li>`;
+        });
+    })
+    .then(() => {
+        window.main.usersList = window.main.usersUl.querySelectorAll("li");
+
+        for (const user of window.main.usersList) {
+            user.addEventListener("click", function() {
+                window.userid = this.getAttribute("data-user-id");
+                view.call(window.main, "user");
+            });
+        }
     });
-});
 
 async function getThreads() {
-    const response = await fetch("/codelp/threads");
+    const response = await fetch("/codelp/threads", {
+        headers: {"Cache-Control": "no-cache"}
+    });
     if (response.ok) return await response.json();
 };
 
-getThreads().then(threads => {
-    threads.forEach(thread => {
-        window.main.threadsUl.innerHTML += `<li data-thread-id="${thread.id}">${thread.title}</li>`;
+getThreads()
+    .then(threads => {
+        threads.forEach(thread => {
+            window.main.threadsUl.innerHTML += `<li class="text-link" data-thread-id="${thread.id}">${thread.title}</li>`;
+        });
+    })
+    .then(() => {
+        window.main.threadsList = window.main.threadsUl.querySelectorAll("li");
+
+        for (const thread of window.main.threadsList) {
+            thread.addEventListener("click", function() {
+                window.thread.id = this.getAttribute("data-thread-id");
+                view.call(window.main, "thread");
+            });
+        }
     });
-});
 
 threadForm.addEventListener("submit", async event => {
     event.preventDefault();
