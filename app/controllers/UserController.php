@@ -37,7 +37,7 @@ class UserController {
         $results = [];
 
         $sql = "
-            SELECT id, email, username, firstname, lastname, password, created_at as createdAt
+            SELECT id, email, username, firstname, lastname, created_at as createdAt
             FROM users WHERE id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
@@ -52,7 +52,7 @@ class UserController {
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);
         $stmt->execute();
-        $results["threads"] = $stmt->fetch();
+        $results["threads"] = $stmt->fetchAll();
 
         $sql = "
             SELECT id, title, description, thread_id AS threadId, created_at AS createdAt FROM posts
@@ -61,7 +61,7 @@ class UserController {
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);
         $stmt->execute();
-        $results["posts"] = $stmt->fetch();
+        $results["posts"] = $stmt->fetchAll();
 
         return $results;
     }
