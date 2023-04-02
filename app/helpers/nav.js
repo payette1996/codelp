@@ -1,7 +1,12 @@
+window.nav.logo = document.querySelector("#logo");
 window.nav.userSpan = document.querySelector("#userSpan");
 window.nav.registerBtn = document.querySelector("#registerBtn");
 window.nav.loginBtn = document.querySelector("#loginBtn");
 window.nav.logoutBtn = document.querySelector("#logoutBtn");
+
+window.nav.logo.addEventListener("click", () => {
+    view.call(window.main, "main");
+});
 
 if (!window.user) {
     window.nav.userSpan.hidden = true;

@@ -87,6 +87,10 @@ input:focus {
     display: flex;
 }
 
+.justify-content-center {
+    justify-content: center;
+}
+
 .justify-content-between {
     justify-content: space-between;
 }
@@ -110,4 +114,13 @@ input:focus {
 .list-none {
     list-style: none;
     padding: 0;
+}
+
+#logo {
+    user-select: none;
+    cursor: pointer;
+}
+
+#logo:hover {
+    color: #E3E7F1;
 }

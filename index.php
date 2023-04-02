@@ -14,6 +14,8 @@ $sections = explode("/", $uri);
 $endpoint = $sections[2] ?? null;
 $parameter = $sections[3] ?? null;
 
+$unserializedUser = isset($_SESSION["user"]) ? unserialize($_SESSION["user"]) : false;
+
 try {
     switch ($endpoint) {
         case "auth":
@@ -21,13 +23,13 @@ try {
             $json = file_get_contents("php://input");
             $data = json_decode($json, true);
             $user = UserController::auth($data["email"], $data["password"]);
+            $user->setRawPassword($data["password"]);
             if ($user) {
                 $response = [
                     "authenticated" => true,
                     "user" => $user->json(true)
                 ];
                 $_SESSION["user"] = serialize($user);
-
             } else {
                 $response = ["authenticated" => false];
             }
@@ -38,8 +40,7 @@ try {
                 case "GET":
                     header("Content-Type: application/json");
                     http_response_code(200);
-                    if (isset($_SESSION["user"])) {
-                        $unserializedUser = unserialize($_SESSION["user"]);
+                    if ($unserializedUser) {
                         echo json_encode($unserializedUser->json(true));
                     } else {
                         echo json_encode(false);
@@ -147,16 +148,21 @@ try {
                     header("Content-Type: application/json");
                     $json = file_get_contents("php://input");
                     $data = json_decode($json, true);
-                    $rawPassword = $data["user"]["password"];
-                    $user = new User($data["user"]);
-                    $thread = new Thread($data["thread"]);
+                    if (!$unserializedUser) {
+                        $rawPassword = $data["user"]["password"];
+                        $user = new User($data["user"]);
+                    } else {
+                        $rawPassword = $unserializedUser->getRawPassword();
+                        $user = $unserializedUser;
+                    }
+                    $thread = isset($data["thread"]) ? new Thread($data["thread"]) : new Thread($data);
                     if (UserController::auth($user->getEmail(), $rawPassword)) {
                         $status = ThreadController::postThread($user, $thread);
                         $status ? http_response_code(201) : http_response_code(400);
                         echo json_encode($status);
                     } else {
-                        http_response_code(403);
-                        echo json_encode(false);
+                        http_response_code(200);
+                        echo json_encode($user->getRawPassword());
                     }
                     break;
                 case "PUT":
@@ -274,6 +280,6 @@ try {
 } catch (Throwable $e) {
     header("Content-Type: application/json");
     http_response_code(400);
-    echo json_encode(false);
+    die("{ 'error': $e }");
 }
 ?>

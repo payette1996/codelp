@@ -3,6 +3,7 @@ class User {
     private int $id;
     private string $email;
     private string $password;
+    private string $rawPassword;
     private string $firstname;
     private string $lastname;
     private string $createdAt;
@@ -49,6 +50,14 @@ class User {
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
+    public function getRawPassword() : string {
+        return $this->password;
+    }
+    
+    public function setRawPassword(string $password) : void {
+        $this->password = $password;
+    }
+
     public function getFirstname() : string {
         return $this->firstname;
     }
@@ -76,6 +85,7 @@ class User {
     public function json(bool $decoded = false) : array|string {
         $data = get_object_vars($this);
         unset($data["password"]);
+        unset($data["rawPassword"]);
         return $decoded ? $data : json_encode($data);
     }
 }

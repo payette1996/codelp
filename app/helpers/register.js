@@ -17,7 +17,6 @@ registerForm.addEventListener("submit", async event => {
 
     if (response.ok) {
         const responseJson = await response.json();
-        console.log(responseJson);
         if (responseJson) {
             view.call(window.main, "login");
             view.call(window.footer, "footer");
