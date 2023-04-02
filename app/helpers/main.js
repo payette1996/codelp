@@ -11,7 +11,7 @@ async function getUsers() {
 
 getUsers().then(users => {
     users.forEach(user => {
-            window.main.usersUl.innerHTML += `<li id="${user.id}">${user.username}</li>`;
+            window.main.usersUl.innerHTML += `<li data-user-id="${user.id}">${user.username}</li>`;
     });
 });
 
@@ -22,7 +22,7 @@ async function getThreads() {
 
 getThreads().then(threads => {
     threads.forEach(thread => {
-        window.main.threadsUl.innerHTML += `<li id="${thread.id}">${thread.title}</li>`;
+        window.main.threadsUl.innerHTML += `<li data-thread-id="${thread.id}">${thread.title}</li>`;
     });
 });
 

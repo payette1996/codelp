@@ -8,6 +8,10 @@ window.nav.logo.addEventListener("click", () => {
     view.call(window.main, "main");
 });
 
+window.nav.userSpan.addEventListener("click", () => {
+    view.call(window.main, "profile");
+});
+
 if (!window.user) {
     window.nav.userSpan.hidden = true;
     window.nav.registerBtn.addEventListener("click", async () => {
@@ -37,7 +41,8 @@ if (!window.user) {
     window.nav.loginBtn.hidden = true;
     window.nav.logoutBtn.hidden = false;
 
-    window.nav.userSpan.innerText = `Welcome, ${window.user.firstname}`;
+    window.nav.userSpan.setAttribute("data-user-id", window.user.id);
+    window.nav.userSpan.innerText = window.user.firstname;
     
     window.nav.logoutBtn.addEventListener("click", async () => {
         const response = await fetch("/codelp/session", { method: "POST" });

@@ -128,11 +128,11 @@ input:focus {
     padding: 0;
 }
 
-#logo {
+.text-link {
     user-select: none;
     cursor: pointer;
 }
 
-#logo:hover {
+.text-link:hover {
     color: #E3E7F1;
 }

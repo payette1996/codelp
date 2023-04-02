@@ -60,10 +60,10 @@ try {
                 case "GET":
                     header("Content-Type: application/json");
                     if ($parameter && $parameter !== "count") {
-                        $user = UserController::getUser($parameter);
-                        if ($user) {
+                        $results = UserController::getUser($parameter);
+                        if ($results) {
                             http_response_code(200);
-                            echo $user->json();
+                            echo json_encode($results);
                         } else {
                             http_response_code(404);
                             echo json_encode(false);

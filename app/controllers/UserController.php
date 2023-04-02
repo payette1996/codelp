@@ -33,7 +33,9 @@ class UserController {
         return $count;
     }
 
-    public static function getUser(int $id) : ?User {
+    public static function getUser(int $id) : array {
+        $results = [];
+
         $sql = "
             SELECT id, email, username, firstname, lastname, password, created_at as createdAt
             FROM users WHERE id = :id
@@ -41,8 +43,27 @@ class UserController {
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);
         $stmt->execute();
-        $result = $stmt->fetch();
-        return $result ? new User($result) : null;
+        $results["user"] = $stmt->fetch();
+
+        $sql = "
+            SELECT id, title, description, created_at AS createdAt FROM threads
+            WHERE threads.user_id = :id
+        ";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $results["threads"] = $stmt->fetch();
+
+        $sql = "
+            SELECT id, title, description, thread_id AS threadId, created_at AS createdAt FROM posts
+            WHERE posts.user_id = :id
+        ";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $results["posts"] = $stmt->fetch();
+
+        return $results;
     }
 
     public static function postUser(User $user) : bool {
