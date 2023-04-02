@@ -46,7 +46,7 @@ getThreads()
 
         for (const thread of window.main.threadsList) {
             thread.addEventListener("click", function() {
-                window.thread.id = this.getAttribute("data-thread-id");
+                window.threadid = this.getAttribute("data-thread-id");
                 view.call(window.main, "thread");
             });
         }
