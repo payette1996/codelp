@@ -20,17 +20,32 @@ class ThreadController {
         return $count;
     }
 
-    public static function getThread(int $id) : ?Thread {
+    public static function getThread(int $id) : array {
+        $results = [];
+
         $sql = "
-            SELECT threads.*, users.username, threads.user_id AS userId, threads.created_at AS createdAt
-            FROM threads JOIN users ON threads.user_id = users.id
-            WHERE threads.id = :id        
+            SELECT threads.*, threads.user_id AS userId, threads.created_at AS createdAt, users.username
+            FROM threads
+            JOIN users ON threads.user_id = users.id
+            WHERE threads.id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);
         $stmt->execute();
-        $result = $stmt->fetch();
-        return $result ? new Thread($result) : null;
+        $results["thread"] = $stmt->fetch();
+
+        $sql = "
+            SELECT posts.*, posts.user_id AS userId, posts.thread_id AS threadId, posts.created_at AS createdAt, users.username
+            FROM posts
+            JOIN users ON posts.user_id = users.id
+            WHERE posts.thread_id = :id
+        ";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $results["posts"] = $stmt->fetchAll();
+
+        return $results;
     }
 
     public static function postThread(User $user, Thread $thread) : bool {

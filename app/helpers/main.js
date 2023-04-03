@@ -75,5 +75,7 @@ threadForm.addEventListener("submit", async event => {
         } else {
             console.log("An error occured during thread post");
         }
+    } else {
+        console.log(await response.text());
     }
 });

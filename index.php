@@ -130,7 +130,7 @@ try {
                         $thread = ThreadController::getThread($parameter);
                         if ($thread) {
                             http_response_code(200);
-                            echo $thread->json();
+                            echo json_encode($thread);
                         } else {
                             http_response_code(404);
                             echo json_encode(false);
@@ -227,9 +227,14 @@ try {
                     header("Content-Type: application/json");
                     $json = file_get_contents("php://input");
                     $data = json_decode($json, true);
-                    $rawPassword = $data["user"]["password"];
-                    $user = new User($data["user"]);
-                    $post = new Post($data["post"]);
+                    if (!$unserializedUser) {
+                        $rawPassword = $data["user"]["password"];
+                        $user = new User($data["user"]);
+                    } else {
+                        $rawPassword = $unserializedUser->getRawPassword();
+                        $user = $unserializedUser;
+                    }
+                    $post = isset($data) ? new Post($data) : new Post($data);
                     if (UserController::auth($user->getEmail(), $rawPassword)) {
                         $status = PostController::postPost($user, $post);
                         $status ? http_response_code(201) : http_response_code(400);
@@ -281,6 +286,6 @@ try {
 } catch (Throwable $e) {
     header("Content-Type: application/json");
     http_response_code(400);
-    exit("{ 'error': $e }");
+    echo($e);
 }
 ?>
