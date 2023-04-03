@@ -107,10 +107,10 @@ class ThreadController {
 
     public static function deleteThread(User $user, Thread|array $thread) : bool {
         if (is_array($thread)) {
-            $sql = "DELETE FROM threads WHERE id IN :ids";
+            $idList = implode(",", $thread);
+            $sql = "DELETE FROM threads WHERE id IN ($idList)";
             $stmt = Database::pdo()->prepare($sql);
-            $stmt->bindValue(":ids", [1, 3, 5]);
-            $stmt->execute();
+            return $stmt->execute();
         } else {
             $sql = "
                 SELECT users.id, threads.user_id FROM users, threads
