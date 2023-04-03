@@ -11,7 +11,6 @@ async function getUser() {
 
 getUser()
     .then(response => {
-        console.log(response);
         if (response.user) {
             for (const key in response.user) {
                 const value = response.user[key];
