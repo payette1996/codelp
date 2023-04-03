@@ -234,7 +234,7 @@ try {
                         $rawPassword = $unserializedUser->getRawPassword();
                         $user = $unserializedUser;
                     }
-                    $post = isset($data) ? new Post($data) : new Post($data);
+                    $post = isset($data["post"]) ? new Post($data["post"]) : new Post($data);
                     if (UserController::auth($user->getEmail(), $rawPassword)) {
                         $status = PostController::postPost($user, $post);
                         $status ? http_response_code(201) : http_response_code(400);

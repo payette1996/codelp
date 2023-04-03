@@ -39,6 +39,7 @@ class ThreadController {
             FROM posts
             JOIN users ON posts.user_id = users.id
             WHERE posts.thread_id = :id
+            ORDER BY posts.id DESC
         ";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);

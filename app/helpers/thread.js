@@ -32,11 +32,12 @@ postForm.addEventListener("submit", async event => {
     event.preventDefault();
 
     const formData = new FormData(postForm);
+    formData.append("threadId", window.threadId);
     const formDataObject = {};
     formData.forEach((value, key) => {
         formDataObject[key] = value;
     });
-    
+
     const response = await fetch("/codelp/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
