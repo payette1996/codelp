@@ -106,25 +106,32 @@ class ThreadController {
     }
 
     public static function deleteThread(User $user, Thread|array $thread) : bool {
-        $sql = "
-            SELECT users.id, threads.user_id FROM users, threads
-            WHERE users.email = :email AND threads.id = :id
-        ";
-        $stmt = Database::pdo()->prepare($sql);
-        $stmt->bindValue(":email", $user->getEmail());
-        $stmt->bindValue(":id", $thread->getId());
-        $stmt->execute();
-        $row = $stmt->fetch();
-        $user->setId($row["id"]);
-        $thread->setUserId($row["user_id"]);
-
-        if ($thread->getUserId() === $user->getId()) {
-            $sql = "DELETE FROM threads WHERE id = :id";
+        if (is_array($thread)) {
+            $sql = "DELETE FROM threads WHERE id IN :ids";
             $stmt = Database::pdo()->prepare($sql);
-            $stmt->bindValue(":id", $thread->getId());
-            return $stmt->execute();
+            $stmt->bindValue(":ids", [1, 3, 5]);
+            $stmt->execute();
         } else {
-            return false;
+            $sql = "
+                SELECT users.id, threads.user_id FROM users, threads
+                WHERE users.email = :email AND threads.id = :id
+            ";
+            $stmt = Database::pdo()->prepare($sql);
+            $stmt->bindValue(":email", $user->getEmail());
+            $stmt->bindValue(":id", $thread->getId());
+            $stmt->execute();
+            $row = $stmt->fetch();
+            $user->setId($row["id"]);
+            $thread->setUserId($row["user_id"]);
+
+            if ($thread->getUserId() === $user->getId()) {
+                $sql = "DELETE FROM threads WHERE id = :id";
+                $stmt = Database::pdo()->prepare($sql);
+                $stmt->bindValue(":id", $thread->getId());
+                return $stmt->execute();
+            } else {
+                return false;
+            }
         }
     }
 }
