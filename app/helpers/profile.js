@@ -1,5 +1,6 @@
 window.main.myProfileUl = document.querySelector("#myProfileUl");
 window.main.myThreadsUl = document.querySelector("#myThreadsUl");
+window.main.myThreadsUl = document.querySelector("#myThreadsUl");
 window.main.myPostsUl = document.querySelector("#myPostsUl");
 
 async function getUser() {
@@ -21,29 +22,66 @@ getUser()
         if (response.threads && response.threads.length > 0) {
             for (const thread of response.threads) {
                 window.main.myThreadsUl.innerHTML += `
-                    <label>
+                    <li><label>
                         <input type="checkbox" name="thread[]" value=${thread.id}></input><br>
                         <strong>Title : </strong><br>${thread.title}<br>
                         <strong>Description : </strong><br>${thread.description}<br>
                         <strong>Created at : </strong><br>${thread.createdAt}<br>
-                    </label><br>
+                    </label></li><br>
                 `;
             }
-            window.main.myThreadsUl.innerHTML += "<input type='button' value='Delete thread(s)'>";
+            window.main.myThreadsUl.innerHTML += "<input type='button' id='deleteThreads' value='Delete thread(s)'>";
         }
 
         if (response.posts && response.posts.length > 0) {
             for (const post of response.posts) {
                 window.main.myPostsUl.innerHTML += `
-                    <label>
-                        <input type="checkbox" name="thread[]" value=${post.id}></input><br>
+                    <li><label>
+                        <input type="checkbox" name="post[]" value=${post.id}></input><br>
                         <strong>Thread title : </strong><br>${post.threadTitle}<br>
                         <strong>Post title : </strong><br>${post.title}<br>
                         <strong>Post escription : </strong><br>${post.description}<br>
                         <strong>Post created at : </strong><br>${post.createdAt}<br>
-                    </label><br>
+                    </label></li><br>
                 `;
             }
-            window.main.myPostsUl.innerHTML += "<input type='button' value='Delete post(s)'>";
+            window.main.myPostsUl.innerHTML += "<input type='button' id='deletePosts' value='Delete post(s)'>";
         }
-    });
+    })
+        .then(() => {
+            deleteThreads = document.querySelector("#deleteThreads");
+            deleteThreads.addEventListener("click", async () => {
+                const checked = document.querySelectorAll('input[name="thread[]"]:checked');
+                const checkedValues = Array.from(checked, check => check.value);
+
+                const response = await fetch("/codelp/threads", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(checkedValues)
+                });
+
+                if (response.ok) {
+                    view.call(window.main, "profile");
+                    view.call(window.footer, "footer");
+                    console.log(await response.text());
+                }
+            });
+
+            deleteThreads = document.querySelector("#deletePosts");
+            deleteThreads.addEventListener("click", async () => {
+                const checked = document.querySelectorAll('input[name="post[]"]:checked');
+                const checkedValues = Array.from(checked, check => check.value);
+
+                const response = await fetch("/codelp/posts", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(checkedValues)
+                });
+
+                if (response.ok) {
+                    view.call(window.main, "profile");
+                    view.call(window.footer, "footer");
+                    console.log(await response.text());
+                }
+            });
+        });

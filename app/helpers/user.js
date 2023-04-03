@@ -1,1 +1,1 @@
-window.main.innerHTML = window.userId;
+window.main.innerHTML = `<strong>User ID : </strong>${window.userId}<br>`;

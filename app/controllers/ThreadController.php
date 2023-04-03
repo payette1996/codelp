@@ -105,7 +105,7 @@ class ThreadController {
         }
     }
 
-    public static function deleteThread(User $user, Thread $thread) : bool {
+    public static function deleteThread(User $user, Thread|array $thread) : bool {
         $sql = "
             SELECT users.id, threads.user_id FROM users, threads
             WHERE users.email = :email AND threads.id = :id

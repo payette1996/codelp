@@ -181,9 +181,16 @@ try {
                     break;
                 case "DELETE":
                     header("Content-Type: application/json");
-                    $rawPassword = $data["user"]["password"];
-                    $user = new User($data["user"]);
-                    $thread = new Thread($data["thread"]);
+                    if (!$unserializedUser) {
+                        $rawPassword = $data["user"]["password"];
+                        $user = new User($data["user"]);
+                        $thread = new Thread($data["thread"]);
+                    } else {
+                        $rawPassword = $unserializedUser->getRawPassword();
+                        $user = $unserializedUser;
+                        $thread = new Thread($data);
+                    }
+
                     if (UserController::auth($user->getEmail(), $rawPassword)) {
                         $status = ThreadController::deleteThread($user, $thread);
                         $status ? http_response_code(204) : http_response_code(400);
@@ -273,7 +280,7 @@ try {
     }
 } catch (Throwable $e) {
     header("Content-Type: text/plain");
-    http_response_code(400);
+    http_response_code(200);
     echo($e);
 }
 ?>
