@@ -11,6 +11,7 @@ async function getUser() {
 
 getUser()
     .then(response => {
+        console.log(response);
         if (response.user) {
             for (const key in response.user) {
                 const value = response.user[key];
@@ -29,7 +30,7 @@ getUser()
         }
 
         if (response.posts && response.posts.length > 0) {
-            for (const post in response.Posts) {
+            for (const post of response.posts) {
                 for (const key in post) {
                     const value = post[key];
                     window.main.myPostsUl.innerHTML += `${key} : ${value}<br>`;
