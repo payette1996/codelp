@@ -1,4 +1,6 @@
 window.main.loginForm = document.querySelector("#loginForm");
+window.main.password = document.querySelector("#password");
+window.main.errorSpan = document.querySelector("#errorSpan");
 
 loginForm.addEventListener("submit", async event => {
     event.preventDefault();
@@ -22,9 +24,8 @@ loginForm.addEventListener("submit", async event => {
             view.call(window.nav, "nav");
             view.call(window.main, "main");
         } else {
-            console.log("Wrong combination");
+            window.main.password.value = "";
+            window.main.errorSpan.hidden = false;
         }
-    } else {
-        console.log("An error occured during authentication");
     }
 });

@@ -29,7 +29,7 @@ getUser()
         }
 
         if (response.posts && response.posts.length > 0) {
-            for (const post of response.Posts) {
+            for (const post in response.Posts) {
                 for (const key in post) {
                     const value = post[key];
                     window.main.myPostsUl.innerHTML += `${key} : ${value}<br>`;

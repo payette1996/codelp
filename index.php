@@ -23,8 +23,8 @@ try {
             $json = file_get_contents("php://input");
             $data = json_decode($json, true);
             $user = UserController::auth($data["email"], $data["password"]);
-            $user->setRawPassword($data["password"]);
             if ($user) {
+                $user->setRawPassword($data["password"]);
                 $response = [
                     "authenticated" => true,
                     "user" => $user->json(true)
@@ -33,6 +33,7 @@ try {
             } else {
                 $response = ["authenticated" => false];
             }
+            http_response_code(200);
             echo json_encode($response);
             break;
         case "session":
@@ -280,6 +281,6 @@ try {
 } catch (Throwable $e) {
     header("Content-Type: application/json");
     http_response_code(400);
-    die("{ 'error': $e }");
+    exit("{ 'error': $e }");
 }
 ?>

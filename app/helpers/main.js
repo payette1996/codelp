@@ -22,7 +22,7 @@ getUsers()
 
         for (const user of window.main.usersList) {
             user.addEventListener("click", function() {
-                window.userid = this.getAttribute("data-user-id");
+                window.userId = this.getAttribute("data-user-id");
                 view.call(window.main, "user");
             });
         }
@@ -46,7 +46,7 @@ getThreads()
 
         for (const thread of window.main.threadsList) {
             thread.addEventListener("click", function() {
-                window.threadid = this.getAttribute("data-thread-id");
+                window.threadId = this.getAttribute("data-thread-id");
                 view.call(window.main, "thread");
             });
         }
