@@ -13,6 +13,15 @@ $uri = $_SERVER["REQUEST_URI"];
 $sections = explode("/", $uri);
 $endpoint = $sections[2] ?? null;
 $parameter = $sections[3] ?? null;
+$json = file_get_contents("php://input");
+
+
+if ($json) {
+    $data = json_decode($json, true);
+    foreach ($data as $key => $value) {
+        if (is_string($value)) $data[$key] = htmlspecialchars($value);
+    }
+}
 
 $unserializedUser = isset($_SESSION["user"]) ? unserialize($_SESSION["user"]) : false;
 
@@ -20,8 +29,6 @@ try {
     switch ($endpoint) {
         case "auth":
             header("Content-Type: application/json");
-            $json = file_get_contents("php://input");
-            $data = json_decode($json, true);
             $user = UserController::auth($data["email"], $data["password"]);
             if ($user) {
                 $user->setRawPassword($data["password"]);
@@ -54,7 +61,6 @@ try {
                     http_response_code(204);
                     break;
             }
-
             break;
         case "users":
             switch ($method) {
@@ -81,8 +87,6 @@ try {
                     break;
                 case "POST":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     $user = new User($data);
                     $status = UserController::postUser($user);
                     $status ? http_response_code(201) : http_response_code(400);
@@ -90,8 +94,6 @@ try {
                     break;
                 case "PUT":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     $rawPassword = $data["user"]["password"];
                     $user = new User($data["user"]);
                     $email = $user->getEmail();
@@ -107,8 +109,6 @@ try {
                     break;
                 case "DELETE":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     $rawPassword = $data["password"];
                     $user = new User($data);
                     if (UserController::auth($user->getEmail(), $rawPassword)) {
@@ -147,8 +147,6 @@ try {
                     break;
                 case "POST":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     if (!$unserializedUser) {
                         $rawPassword = $data["user"]["password"];
                         $user = new User($data["user"]);
@@ -168,8 +166,6 @@ try {
                     break;
                 case "PUT":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     $rawPassword = $data["user"]["password"];
                     $user = new User($data["user"]);
                     $thread = new Thread($data["thread"]);
@@ -185,8 +181,6 @@ try {
                     break;
                 case "DELETE":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     $rawPassword = $data["user"]["password"];
                     $user = new User($data["user"]);
                     $thread = new Thread($data["thread"]);
@@ -225,8 +219,6 @@ try {
                     break;
                 case "POST":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     if (!$unserializedUser) {
                         $rawPassword = $data["user"]["password"];
                         $user = new User($data["user"]);
@@ -246,8 +238,6 @@ try {
                     break;
                 case "PUT":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     $rawPassword = $data["user"]["password"];
                     $user = new User($data["user"]);
                     $post = new Post($data["post"]);
@@ -263,8 +253,6 @@ try {
                     break;
                 case "DELETE":
                     header("Content-Type: application/json");
-                    $json = file_get_contents("php://input");
-                    $data = json_decode($json, true);
                     $rawPassword = $data["user"]["password"];
                     $user = new User($data["user"]);
                     $post = new Post($data["post"]);
@@ -284,7 +272,7 @@ try {
             break;
     }
 } catch (Throwable $e) {
-    header("Content-Type: application/json");
+    header("Content-Type: text/plain");
     http_response_code(400);
     echo($e);
 }
