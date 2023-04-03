@@ -33,7 +33,6 @@ getUser()
         }
 
         if (response.posts && response.posts.length > 0) {
-            console.log(response.posts);
             for (const post of response.posts) {
                 window.main.myPostsUl.innerHTML += `
                     <label>
