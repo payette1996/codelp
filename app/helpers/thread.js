@@ -12,18 +12,23 @@ async function getThread(id) {
 getThread(window.threadId)
 .then(response => {
         if (response["thread"]) {
-            for (const key in response["thread"]) {
-                const value = response["thread"][key];
-                window.main.threadUl.innerHTML += `${key} : ${value}<br>`;
-            }
+            const thread = response["thread"];
+            window.main.threadUl.innerHTML += `
+                <strong>Title:</strong><br>${thread.title}<br>
+                <strong>Description:</strong><br>${thread.description}<br>
+                <strong>Username:</strong><br>${thread.username}<br>
+                <strong>Created at:</strong><br>${thread.createdAt}<br>
+            `;
         }
         if (response["posts"]) {
             for (const post of response["posts"]) {
-                for (const key in post) {
-                    const value = post[key];
-                    window.main.postsUl.innerHTML += `${key} : ${value}<br>`;
-                }
-                window.main.postsUl.innerHTML += "<br><hr><br>";
+                window.main.postsUl.innerHTML += `
+                    <strong>Title:</strong><br>${post.title}<br>
+                    <strong>Description:</strong><br>${post.description}<br>
+                    <strong>Username:</strong><br>${post.username}<br>
+                    <strong>Created at:</strong><br>${post.createdAt}<br></br>
+                `;
+                window.main.postsUl.innerHTML += "<hr><br>";
             }
         }
     });

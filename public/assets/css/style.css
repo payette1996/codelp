@@ -24,6 +24,10 @@ nav {
     line-height: 4rem;
 }
 
+ul {
+    padding: 0;
+}
+
 label {
     display: block;
 }

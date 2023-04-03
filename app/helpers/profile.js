@@ -14,27 +14,37 @@ getUser()
         if (response.user) {
             for (const key in response.user) {
                 const value = response.user[key];
-                window.main.myProfileUl.innerHTML += `${key} : ${value}<br>`;
+                window.main.myProfileUl.innerHTML += `<strong>${key} : </strong>${value}<br>`;
             }
         }
 
         if (response.threads && response.threads.length > 0) {
             for (const thread of response.threads) {
-                for (const key in thread) {
-                    const value = thread[key];
-                    window.main.myThreadsUl.innerHTML += `${key} : ${value}<br>`;
-                }
-                window.main.myThreadsUl.innerHTML += "<br>";
+                window.main.myThreadsUl.innerHTML += `
+                    <label>
+                        <input type="checkbox" name="thread[]" value=${thread.id}></input><br>
+                        <strong>Title : </strong><br>${thread.title}<br>
+                        <strong>Description : </strong><br>${thread.description}<br>
+                        <strong>Created at : </strong><br>${thread.createdAt}<br>
+                    </label><br>
+                `;
             }
+            window.main.myThreadsUl.innerHTML += "<input type='button' value='Delete thread(s)'>";
         }
 
         if (response.posts && response.posts.length > 0) {
+            console.log(response.posts);
             for (const post of response.posts) {
-                for (const key in post) {
-                    const value = post[key];
-                    window.main.myPostsUl.innerHTML += `${key} : ${value}<br>`;
-                }
-                window.main.myPostsUl.innerHTML += "<br>";
+                window.main.myPostsUl.innerHTML += `
+                    <label>
+                        <input type="checkbox" name="thread[]" value=${post.id}></input><br>
+                        <strong>Thread title : </strong><br>${post.threadTitle}<br>
+                        <strong>Post title : </strong><br>${post.title}<br>
+                        <strong>Post escription : </strong><br>${post.description}<br>
+                        <strong>Post created at : </strong><br>${post.createdAt}<br>
+                    </label><br>
+                `;
             }
+            window.main.myPostsUl.innerHTML += "<input type='button' value='Delete post(s)'>";
         }
     });

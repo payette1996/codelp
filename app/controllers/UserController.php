@@ -55,8 +55,21 @@ class UserController {
         $results["threads"] = $stmt->fetchAll();
 
         $sql = "
-            SELECT id, title, description, thread_id AS threadId, created_at AS createdAt FROM posts
-            WHERE posts.user_id = :id
+            SELECT 
+                posts.id, 
+                posts.title, 
+                posts.description, 
+                posts.thread_id AS threadId, 
+                posts.created_at AS createdAt,
+                threads.title AS threadTitle
+            FROM 
+                posts 
+            JOIN 
+                threads 
+            ON 
+                posts.thread_id = threads.id
+            WHERE 
+                posts.user_id = :id
         ";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->bindValue(":id", $id);
