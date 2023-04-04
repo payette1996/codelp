@@ -50,38 +50,36 @@ getUser()
     })
         .then(() => {
             deleteThreads = document.querySelector("#deleteThreads");
-            deleteThreads.addEventListener("click", async () => {
-                const checked = document.querySelectorAll('input[name="thread[]"]:checked');
-                const checkedValues = Array.from(checked, check => check.value);
-
-                const response = await fetch("/codelp/threads", {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(checkedValues)
-                });
-
-                if (response.ok) {
+            if (deleteThreads) {
+                deleteThreads.addEventListener("click", async () => {
+                    const checked = document.querySelectorAll('input[name="thread[]"]:checked');
+                    const checkedValues = Array.from(checked, check => check.value);
+                    for (const checkValue of checkedValues) {
+                            await fetch("/codelp/threads", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({id: checkValue})
+                        });
+                    }
                     view.call(window.main, "profile");
                     view.call(window.footer, "footer");
-                    console.log(await response.text());
-                }
-            });
-
-            deleteThreads = document.querySelector("#deletePosts");
-            deleteThreads.addEventListener("click", async () => {
-                const checked = document.querySelectorAll('input[name="post[]"]:checked');
-                const checkedValues = Array.from(checked, check => check.value);
-
-                const response = await fetch("/codelp/posts", {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(checkedValues)
                 });
+            }
 
-                if (response.ok) {
+            deletePosts = document.querySelector("#deletePosts");
+            if (deletePosts) {
+                deletePosts.addEventListener("click", async () => {
+                    const checked = document.querySelectorAll('input[name="post[]"]:checked');
+                    const checkedValues = Array.from(checked, check => check.value);
+                    for (const checkValue of checkedValues) {
+                            await fetch("/codelp/posts", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({id: checkValue})
+                        });
+                    }
                     view.call(window.main, "profile");
                     view.call(window.footer, "footer");
-                    console.log(await response.text());
-                }
-            });
+                });
+            }
         });

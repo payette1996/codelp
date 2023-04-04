@@ -260,9 +260,16 @@ try {
                     break;
                 case "DELETE":
                     header("Content-Type: application/json");
-                    $rawPassword = $data["user"]["password"];
-                    $user = new User($data["user"]);
-                    $post = new Post($data["post"]);
+                    if (!$unserializedUser) {
+                        $rawPassword = $data["user"]["password"];
+                        $user = new User($data["user"]);
+                        $post = new Post($data["post"]);
+                    } else {
+                        $rawPassword = $unserializedUser->getRawPassword();
+                        $user = $unserializedUser;
+                        $post = new Post($data);
+                    }
+
                     if (UserController::auth($user->getEmail(), $rawPassword)) {
                         $status = PostController::deletePost($user, $post);
                         $status ? http_response_code(204) : http_response_code(400);
